@@ -35,4 +35,18 @@ Nous avons choisi de réaliser notre projet en nous basant sur l'architecture de
 \section{Ensemble d'instructions}
 Nous comptons utiliser un ensemble de \emph{32} instructions afin de réaliser des opérations sur des entiers non signés. Nous encoderons nos instructions de plusieurs façon différentes en fonction du type d'instruction (registres ou saut).
 
+\begin{center}
+	\def\arraystretch{1.5}
+	\begin{tabular}{c*{5}{p{0.15\textwidth}}}
+		&31\hfill20&19\hfill15&14\hfill10&9\hfill5&4\hfill0\\
+		\cline{2-6}
+		R&\multicolumn{1}{|c|}{immédiat}&\multicolumn{1}{|c|}{rs2}&\multicolumn{1}{|c|}{rs1}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+		\cline{2-6}
+		I&\multicolumn{2}{|c|}{immédiat}&\multicolumn{1}{|c|}{rs}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+		\cline{2-6}
+		U&\multicolumn{3}{|c|}{immédiat}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+		\cline{2-6}
+\end{tabular}
+\end{center}
+
 \end{document}
