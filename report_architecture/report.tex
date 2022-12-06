@@ -19,11 +19,20 @@
 
 \sloppy
 
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\newcommand{\risc}{RISC-\RNum{5}}
+
 \title{Rapport architecture microprocesseur}
-\author{Yannis Kedadry \and Antoine Anastassiades \and Oscar Garnier}
+\author{Yannis Kedadry \and Oscar Garnier \and Antoine Anastassiades }
 \date{12 decembre 2022}
 
 \begin{document}
 \maketitle
+
+\section{Choix de l'architecture}
+Nous avons choisi de réaliser notre projet en nous basant sur l'architecture de \risc{} 32 bits. Nous utiliserons 32 registres.
+
+\section{Ensemble d'instructions}
+Nous comptons utiliser un ensemble de \emph{32} instructions afin de réaliser des opérations sur des entiers non signés. Nous encoderons nos instructions de plusieurs façon différentes en fonction du type d'instruction (registres ou saut).
 
 \end{document}
