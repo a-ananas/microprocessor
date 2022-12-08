@@ -7,7 +7,7 @@
 
 ## PROCESSOR
 
-- [ ] create atomical blocks (carotte functions, cf carotte/tutorials) that we'll probably use later
+- [ ] create atomic blocks (carotte functions, cf carotte/tutorials) that we'll probably use later
 
 - [ ] desgin the ALU (on paper)
 
