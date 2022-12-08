@@ -52,7 +52,7 @@ print:
 tofile:
 	$(PY) $(CAROTTE) -o $(OUTPUT) $(TARGET)
 
-## Remove net files and cache
+## Remove net files and python caches
 clean:
 ifneq ("$(wildcard *.net)","")
 	@rm *.net
