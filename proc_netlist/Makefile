@@ -1,8 +1,9 @@
 PY := python
 CAROTTE_DIR := ./carotte
 CAROTTE := $(CAROTTE_DIR)/carotte.py
-
 CACHES := __pycache__ $(CAROTTE_DIR)/__pycache__
+
+NET_DIR := net
 
 #for the moment it's just a test
 TARGET := test_fulladder.py
@@ -49,13 +50,16 @@ print:
 	$(PY) $(CAROTTE) $(TARGET)
 
 ## Write the netlist to a file (OUTPUT=<filename> to specify the file)
-tofile:
-	$(PY) $(CAROTTE) -o $(OUTPUT) $(TARGET)
+tofile: | netdir
+	$(PY) $(CAROTTE) -o $(NET_DIR)/$(OUTPUT) $(TARGET)
+
+netdir:
+	@mkdir -p $(NET_DIR)
 
 ## Remove net files and python caches
 clean:
-ifneq ("$(wildcard *.net)","")
-	@rm *.net
+ifneq ("$(wildcard $(NET_DIR))","")
+	@rm -r $(NET_DIR)
 endif
 ifneq ("$(wildcard $(CACHES))","")
 	@rm -r $(CACHES)
