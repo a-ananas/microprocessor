@@ -1,8 +1,9 @@
 *.log
-
 *.aux
-
 *.out
+*.fls
+*.fdb_latexmk
+*.gz
 
 __pycache__
 net/

@@ -33,8 +33,22 @@
 Nous avons choisi de réaliser notre projet en nous basant sur l'architecture de \risc{} 32 bits. Nous utiliserons 32 registres.
 
 \section{Ensemble d'instructions}
-Nous comptons utiliser un ensemble de \emph{32} instructions afin de réaliser des opérations sur des entiers non signés. Nous encoderons nos instructions de plusieurs façon différentes en fonction du type d'instruction (registres ou saut).
+Nous comptons utiliser un ensemble de 28 instructions afin de réaliser des opérations sur des entiers non signés. 
+Nous encoderons nos instructions de plusieurs façon différentes en fonction du type d'instruction 
+(opérations avec immédiats I, avec saut U ou uniquement sur des registres R). 
+Les différentes opérations que nous utiliserons seront : 
+\begin{itemize}
+	\item \emph{add}, \emph{sub} (types R) et \emph{addi} (type I). Ce sont nos instructions arithmétiques.
+	\item \emph{sll}, \emph{srl}, \emph{sra} de types R et leur pendant de type I afin de réaliser des décalages bit à bit.
+	\item les opérations logiques \emph{and}, \emph{or} et \emph{xor} de type R et leur pendant de type I.
+	\item les opérations de tests \emph{slt} et \emph{slti}.
+	\item \emph{lui} et \emph{auipc} sont des instructions spéciales permettant de se déplacer sur la pile. Ce sont des instructions de type J.
+	\item \emph{beq} \emph{bne} \emph{blt} \emph{blti} \emph{bge} nous permettent de réaliser des branchements conditionnels.
+	\item \emph{jal} \emph{jalr} permettent des branchements inconditionnels.
+	\item \emph{lw} charge \emph{sw} stocke des données en mémoire.
+\end{itemize}
 
+Voici les différents encodage pour les différents types d'instructions. Avoir ces types nous permet de manipuler des immédiats de grande taille. Ce n'est peut-être pas impératif mais cela pourrait nous faciliter la tâche dans certains cas précis.
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{tabular}{c*{5}{p{0.15\textwidth}}}
@@ -46,7 +60,30 @@ Nous comptons utiliser un ensemble de \emph{32} instructions afin de réaliser d
 		\cline{2-6}
 		U&\multicolumn{3}{|c|}{immédiat}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
 		\cline{2-6}
-\end{tabular}
+	\end{tabular}
 \end{center}
+
+\newpage
+\section{Opcodes}
+
+Nos instructions suiveront les opcodes suivant:
+\newline
+
+\begin{center}
+	\def\arraystretch{2.5}
+	\begin{tabular}{p{0.08\textwidth}||c*{8}{p{0.08\textwidth}}}
+		& 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+		\cline{1-9}
+		00 & Addi & & Srli & Srai & Slli & Andi & Ori & Xori \\
+		\cline{1-9}
+		01 & Add & Sub & Srl & Sra & Sll & And & Or & Xor \\
+		\cline{1-9}
+		10 & Slt & Slti & & Beq & Bne & Blt & Blti & Bgr \\
+		\cline{1-9}
+		11 & Lui & Auipc & & Jal & Jalr & & Lw & Sw \\
+	\end{tabular}
+\end{center}
+
+
 
 \end{document}
