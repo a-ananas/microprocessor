@@ -1,14 +1,16 @@
-PY := python
+PY := python3
 CAROTTE_DIR := ./carotte
 CAROTTE := $(CAROTTE_DIR)/carotte.py
 CACHES := __pycache__ $(CAROTTE_DIR)/__pycache__
 
-NET_DIR := net
+#temporary to fix some problems
+NET_DIR := netlist_simulator/test/net
 
 #for the moment it's just a test
-TARGET := test_fulladder.py
+TARGET := main.py
+BASE_NAME := $(basename $(TARGET))
 
-OUTPUT ?= $(TARGET).net
+OUTPUT ?= $(BASE_NAME).net
 
 # COLORS
 BLACK   := $(shell tput -Txterm setaf 0)
@@ -48,6 +50,10 @@ help:
 ## Print the netlist to the standard output
 print: 
 	$(PY) $(CAROTTE) $(TARGET)
+
+netlist: tofile
+	@echo $(BASE_NAME)
+	bash test.sh test/net $(BASE_NAME)
 
 ## Write the netlist to a file (OUTPUT=<filename> to specify the file)
 tofile: | netdir
