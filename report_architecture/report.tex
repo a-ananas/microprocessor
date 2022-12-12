@@ -43,12 +43,13 @@ Les différentes opérations que nous utiliserons seront :
 	\item les opérations logiques \emph{and}, \emph{or} et \emph{xor} de type R et leur pendant de type I.
 	\item les opérations de tests \emph{slt} et \emph{slti}.
 	\item \emph{lui} et \emph{auipc} sont des instructions spéciales permettant de se déplacer sur la pile. Ce sont des instructions de type J.
-	\item \emph{beq} \emph{bne} \emph{blt} \emph{blti} \emph{bge} nous permettent de réaliser des branchements conditionnels.
-	\item \emph{jal} \emph{jalr} permettent des branchements inconditionnels.
-	\item \emph{lw} charge \emph{sw} stocke des données en mémoire.
+	\item \emph{beq}, \emph{bne}, \emph{blt}, \emph{blti} et \emph{bge} nous permettent de réaliser des branchements conditionnels. Ils sont de type I.
+	\item \emph{jal} et \emph{jalr} permettent des branchements inconditionnels. Ils sont de type J.
+	\item \emph{lw} charge \emph{sw} stocke des données en mémoire. Ils sont de type I.
 \end{itemize}
 
 Voici les différents encodage pour les différents types d'instructions. Avoir ces types nous permet de manipuler des immédiats de grande taille. Ce n'est peut-être pas impératif mais cela pourrait nous faciliter la tâche dans certains cas précis.
+\emph{rd} représente les registres de destination et \emph{rsX} les registre sources qui peuvent être unique ou en pair.
 \begin{center}
 	\def\arraystretch{1.5}
 	\begin{tabular}{c*{5}{p{0.15\textwidth}}}
