@@ -13,3 +13,5 @@ def main() -> None:
     (result, out_carry) = full_adder(a, b, c)
     result.set_as_output("r")
     out_carry.set_as_output("out_c")
+
+
