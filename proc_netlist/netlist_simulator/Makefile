@@ -1,4 +1,5 @@
 file = fulladder
+dir = test
 list = "clock_div cm2 fulladder nadder ram"
 n = 
 print = 
@@ -6,19 +7,19 @@ print =
 
 all: netlist_simulator.byte
 ifndef n
-	dune exec ./netlist_simulator.exe test/$(file).net
+	dune exec ./netlist_simulator.exe $(dir)/$(file).net
 else
-	dune exec -- ./netlist_simulator.exe -n $(n)  test/$(file).net
+	dune exec -- ./netlist_simulator.exe -n $(n)  $(dir)/$(file).net
 endif
 
-sched: scheduler_test.byte
+sched: scheduler_$(dir).byte
 ifdef n
-	dune exec -- ./scheduler_test.exe -n $(n)  test/$(file).net
+	dune exec -- ./scheduler_$(dir).exe -n $(n)  test/$(file).net
 else ifndef print
-	dune exec ./scheduler_test.exe test/$(file).net
+	dune exec ./scheduler_$(dir).exe test/$(file).net
 else
-	dune exec -- ./scheduler_test.exe -print test/$(file).net
-	cat test/$(file)_sch.net
+	dune exec -- ./scheduler_$(dir).exe -print test/$(file).net
+	cat $(dir)/$(file)_sch.net
 endif
 
 graph: graph.byte
