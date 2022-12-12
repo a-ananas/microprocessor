@@ -4,12 +4,13 @@ CAROTTE := $(CAROTTE_DIR)/carotte.py
 CACHES := __pycache__ $(CAROTTE_DIR)/__pycache__
 
 #temporary to fix some problems
-NET_DIR := netlist_simulator/test/net
+SIMU_DIR := ../netlist_simulator
+SIMU_NET := $(SIMU_DIR)/test/net
+NET_DIR := net
 
 #for the moment it's just a test
 TARGET := main.py
 BASE_NAME := $(basename $(TARGET))
-
 OUTPUT ?= $(BASE_NAME).net
 
 # COLORS
@@ -51,13 +52,16 @@ help:
 print: 
 	$(PY) $(CAROTTE) $(TARGET)
 
+## run the netlist simulator on the netlist produced in main.py
 netlist: tofile
 	@echo $(BASE_NAME)
-	bash test.sh test/net $(BASE_NAME)
+	@bash test.sh test/net $(BASE_NAME)
 
 ## Write the netlist to a file (OUTPUT=<filename> to specify the file)
 tofile: | netdir
 	$(PY) $(CAROTTE) -o $(NET_DIR)/$(OUTPUT) $(TARGET)
+	# copy to simulator
+	@cp -r $(NET_DIR) $(SIMU_NET)
 
 netdir:
 	@mkdir -p $(NET_DIR)
