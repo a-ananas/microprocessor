@@ -7,3 +7,6 @@
 
 __pycache__
 net/
+
+_build
+proc_netlist/netlist_simulator/test/_build
