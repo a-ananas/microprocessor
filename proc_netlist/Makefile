@@ -1,4 +1,4 @@
-PY := python
+PY := python3
 CAROTTE_DIR := ./carotte
 CAROTTE := $(CAROTTE_DIR)/carotte.py
 CACHES := __pycache__ $(CAROTTE_DIR)/__pycache__
