@@ -1,17 +1,11 @@
 from lib_carotte import *
-
-def full_adder(a: Variable, b: Variable, c: Variable) -> typing.Tuple[Variable, Variable]:
-    '''1-bit full adder implementation'''
-    tmp = a ^ b
-    return (tmp ^ c, (tmp & c) | (a & b))
+import sys
+sys.path.append("./alu")
+from arith import *
 
 def main() -> None:
     '''Entry point of this example'''
-    a = Input(1)
-    b = Input(1)
-    c = Input(1)
-    (result, out_carry) = full_adder(a, b, c)
+    a = Input(32)
+    b = Input(32)
+    result = adder32(a, b)
     result.set_as_output("r")
-    out_carry.set_as_output("out_c")
-
-

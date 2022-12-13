@@ -9,7 +9,7 @@ SIMU_NET := $(SIMU_DIR)/test/net
 NET_DIR := net
 
 #for the moment it's just a test
-TARGET := main.py
+TARGET ?= main.py
 BASE_NAME := $(basename $(TARGET))
 OUTPUT ?= $(BASE_NAME).net
 

@@ -35,6 +35,3 @@ def sll16(a):
     for i in range(32 - 16):
         b = concat(b,a[i])
     return b
-
-def sll(a,b):
-    for i in range()
