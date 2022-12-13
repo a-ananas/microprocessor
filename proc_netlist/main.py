@@ -1,11 +1,11 @@
 from lib_carotte import *
 import sys
-sys.path.append("./alu")
-from arith import *
+sys.path.append("./reg")
+from register import *
 
 def main() -> None:
     '''Entry point of this example'''
-    a = Input(32)
-    b = Input(32)
-    (r,c) = sub32(a, b)
-    r.set_as_output("r")
+    wd = Input(8)
+    we = Input(1)
+    o = reg_8(wd, we)
+    o.set_as_output("r")
