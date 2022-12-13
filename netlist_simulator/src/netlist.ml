@@ -6,7 +6,7 @@ let find_file filename =
   try
     open_in filename
   with
-    | _ -> raise (Parse_error ("No such file '"^filename^"'"))
+    | _ -> raise (Parse_error ("No such file '"^filename^"%s'"))
 
 (** [read_file filename] reads the [filename] file and outputs the corresponding
     Netlist_ast.program.*)

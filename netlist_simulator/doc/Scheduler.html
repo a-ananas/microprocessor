@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Netlist_simulator.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Graph" rel="Chapter" href="Graph.html">
+<link title="Netlist_simulator" rel="Chapter" href="Netlist_simulator.html">
+<link title="Scheduler" rel="Chapter" href="Scheduler.html"><title>Scheduler</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Netlist_simulator.html" title="Netlist_simulator">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Scheduler.html">Scheduler</a></h1>
+
+<pre><span id="MODULEScheduler"><span class="keyword">module</span> Scheduler</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Scheduler.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>The netlist scheduler</p>
+</div>
+</div>
+<hr width="100%">
+<p>an exception thrown when a cycle is found on the netlist program</p>
+
+<pre><span id="EXCEPTIONCombinational_cycle"><span class="keyword">exception</span> Combinational_cycle</span></pre>
+<p>get identifiers that should not cause a combinational cycle from an expression</p>
+
+<pre><span id="VALread_exp"><span class="keyword">val</span> read_exp</span> : <code class="type">'a * Netlist_ast.exp -> Netlist_ast.ident list</code></pre><p>get all the keys from a program's environment</p>
+
+<pre><span id="VALgetKeys"><span class="keyword">val</span> getKeys</span> : <code class="type">'a Netlist_ast.Env.t -> Netlist_ast.Env.key list</code></pre><p>initiate a graph containing for nodes all the keys from a program's environment</p>
+
+<pre><span id="VALinitGraph"><span class="keyword">val</span> initGraph</span> : <code class="type">Netlist_ast.program -> Netlist_ast.Env.key <a href="Graph.html#TYPEgraph">Graph.graph</a></code></pre><p>add edges in a graph to a list of node having the same output</p>
+
+<pre><span id="VALaddEdges"><span class="keyword">val</span> addEdges</span> : <code class="type">'a <a href="Graph.html#TYPEgraph">Graph.graph</a> -> 'a list -> 'a -> 'a <a href="Graph.html#TYPEgraph">Graph.graph</a></code></pre><p>turn a program into a graph</p>
+
+<pre><span id="VALprogram_to_graph"><span class="keyword">val</span> program_to_graph</span> : <code class="type">Netlist_ast.program -> Netlist_ast.ident <a href="Graph.html#TYPEgraph">Graph.graph</a></code></pre><p>get all the equation of a list that have the given identifier as identifier</p>
+
+<pre><span id="VALgetEq"><span class="keyword">val</span> getEq</span> : <code class="type">'a -> ('a * 'b) list -> 'a * 'b</code></pre><p>transform a list of identifiers into a list of equations</p>
+
+<pre><span id="VALidentList_to_equationList"><span class="keyword">val</span> identList_to_equationList</span> : <code class="type">Netlist_ast.ident list -><br>       Netlist_ast.program -> (Netlist_ast.ident * Netlist_ast.exp) list</code></pre><p>transform a program into the same program but with its netlist topologically sorted</p>
+
+<pre><span id="VALschedule"><span class="keyword">val</span> schedule</span> : <code class="type">Netlist_ast.program -> Netlist_ast.program</code></pre></body></html>

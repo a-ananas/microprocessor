@@ -1,0 +1,35 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Graph" rel="Chapter" href="Graph.html">
+<link title="Netlist_simulator" rel="Chapter" href="Netlist_simulator.html">
+<link title="Scheduler" rel="Chapter" href="Scheduler.html"><title>Graph</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">Cycle</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;mark&nbsp;=&nbsp;<span class="constructor">NotVisited</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">InProgress</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Visited</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;graph&nbsp;=&nbsp;{&nbsp;<span class="keyword">mutable</span>&nbsp;g_nodes&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.node&nbsp;list;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;node&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_label&nbsp;:&nbsp;<span class="keywordsign">'</span>a;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;n_mark&nbsp;:&nbsp;<span class="constructor">Graph</span>.mark;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;n_link_to&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.node&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">mutable</span>&nbsp;n_linked_by&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.node&nbsp;list;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mk_graph&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_node&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;node_of_label&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.node<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_edge&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;clear_marks&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;find_roots&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.node&nbsp;list<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;has_cycle&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;print_list_int&nbsp;:&nbsp;int&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;print_list_string&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;topological&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Graph</span>.graph&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;list<br>
+<span class="keyword">end</span></code></body></html>

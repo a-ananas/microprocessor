@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Graph.html">
+<link rel="next" href="Scheduler.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Graph" rel="Chapter" href="Graph.html">
+<link title="Netlist_simulator" rel="Chapter" href="Netlist_simulator.html">
+<link title="Scheduler" rel="Chapter" href="Scheduler.html"><title>Netlist_simulator</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Graph.html" title="Graph">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Scheduler.html" title="Scheduler">Next</a>
+</div>
+<h1>Module <a href="type_Netlist_simulator.html">Netlist_simulator</a></h1>
+
+<pre><span id="MODULENetlist_simulator"><span class="keyword">module</span> Netlist_simulator</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Netlist_simulator.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>The netlist simulator</p>
+</div>
+</div>
+<hr width="100%">
+<p>the option to only show the running program</p>
+
+<pre><span id="VALprint_only"><span class="keyword">val</span> print_only</span> : <code class="type">bool Stdlib.ref</code></pre><p>the option to specify the number of cycle on wich run the program</p>
+
+<pre><span id="VALnumber_steps"><span class="keyword">val</span> number_steps</span> : <code class="type">int Stdlib.ref</code></pre><p>the standard output for format printer</p>
+
+<pre><span id="VALfStdout"><span class="keyword">val</span> fStdout</span> : <code class="type">Stdlib.Format.formatter</code></pre><p>the error output for format printer</p>
+
+<pre><span id="VALfStderr"><span class="keyword">val</span> fStderr</span> : <code class="type">Stdlib.Format.formatter</code></pre><p>an exception thrown when a logical error from the input program is found</p>
+
+<pre><span id="EXCEPTIONLogicalError"><span class="keyword">exception</span> LogicalError</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+<p>an exception thrown when a an impossible situation happens</p>
+
+<pre><span id="EXCEPTIONSystemError"><span class="keyword">exception</span> SystemError</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+<p>the size of the adresses in the ROM</p>
+
+<pre><span id="VALromAddrSize"><span class="keyword">val</span> romAddrSize</span> : <code class="type">int</code></pre><p>the size of a word in the ROM</p>
+
+<pre><span id="VALromWordSize"><span class="keyword">val</span> romWordSize</span> : <code class="type">int</code></pre><p>the size of the adresses in the RAM</p>
+
+<pre><span id="VALramAddrSize"><span class="keyword">val</span> ramAddrSize</span> : <code class="type">int</code></pre><p>the size of a word in the RAM</p>
+
+<pre><span id="VALramWordSize"><span class="keyword">val</span> ramWordSize</span> : <code class="type">int</code></pre><p>return the Value of an argument</p>
+
+<pre><span id="VALcalculArg"><span class="keyword">val</span> calculArg</span> : <code class="type">Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>convert a Value into an adress</p>
+
+<pre><span id="VALvalueToAdress"><span class="keyword">val</span> valueToAdress</span> : <code class="type">Netlist_ast.value -> int -> string</code></pre><p>get an adress from an arg</p>
+
+<pre><span id="VALargToAdress"><span class="keyword">val</span> argToAdress</span> : <code class="type">Netlist_ast.arg -> int -> Netlist_ast.value Netlist_ast.Env.t -> string</code></pre><p>init the environment</p>
+
+<pre><span id="VALinitEnv"><span class="keyword">val</span> initEnv</span> : <code class="type">Netlist_ast.program -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>return the Value of a Register</p>
+
+<pre><span id="VALcalculReg"><span class="keyword">val</span> calculReg</span> : <code class="type">Netlist_ast.Env.key -> 'a Netlist_ast.Env.t -> 'a</code></pre><p>return the Value after a Not operation</p>
+
+<pre><span id="VALcalculNot"><span class="keyword">val</span> calculNot</span> : <code class="type">Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>applies a binary operation</p>
+
+<pre><span id="VALbinopAux"><span class="keyword">val</span> binopAux</span> : <code class="type">Netlist_ast.arg -><br>       Netlist_ast.arg -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       (bool -> bool -> bool) -> string -> Netlist_ast.value</code></pre><p>return the Value after an Or operation between VBits</p>
+
+<pre><span id="VALorOp"><span class="keyword">val</span> orOp</span> : <code class="type">bool -> bool -> bool</code></pre><p>return the Value after an Xor operation between VBits</p>
+
+<pre><span id="VALxorOp"><span class="keyword">val</span> xorOp</span> : <code class="type">'a -> 'a -> bool</code></pre><p>return the Value after an And operation between VBits</p>
+
+<pre><span id="VALandOp"><span class="keyword">val</span> andOp</span> : <code class="type">bool -> bool -> bool</code></pre><p>return the Value after an And operation between VBits</p>
+
+<pre><span id="VALnandOp"><span class="keyword">val</span> nandOp</span> : <code class="type">bool -> bool -> bool</code></pre><p>return the Value after a binary operation</p>
+
+<pre><span id="VALcalculBinop"><span class="keyword">val</span> calculBinop</span> : <code class="type">Netlist_ast.binop -><br>       Netlist_ast.arg -><br>       Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>return the Value after a multiplexor operation</p>
+
+<pre><span id="VALcalculMux"><span class="keyword">val</span> calculMux</span> : <code class="type">Netlist_ast.arg -><br>       Netlist_ast.arg -><br>       Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>return the Value after a concatenation</p>
+
+<pre><span id="VALcalculConcat"><span class="keyword">val</span> calculConcat</span> : <code class="type">Netlist_ast.arg -><br>       Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>return the Value after a slice</p>
+
+<pre><span id="VALcalculSlice"><span class="keyword">val</span> calculSlice</span> : <code class="type">int -><br>       int -><br>       Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>return the Value after a bit selection</p>
+
+<pre><span id="VALcalculSelect"><span class="keyword">val</span> calculSelect</span> : <code class="type">int -><br>       Netlist_ast.arg -> Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value</code></pre><p>read a value from a memory</p>
+
+<pre><span id="VALreadValueFromMemory"><span class="keyword">val</span> readValueFromMemory</span> : <code class="type">int -><br>       int -><br>       Netlist_ast.arg -><br>       Netlist_ast.value Netlist_ast.Env.t -> 'a Netlist_ast.Env.t -> int -> 'a</code></pre><p>return the Value after a ROM access</p>
+
+<pre><span id="VALcalculRom"><span class="keyword">val</span> calculRom</span> : <code class="type">int -><br>       int -><br>       Netlist_ast.arg -><br>       Netlist_ast.value Netlist_ast.Env.t -> 'a Netlist_ast.Env.t -> 'a</code></pre><p>return the Value after a RAM access and the modified ram it's been modified</p>
+
+<pre><span id="VALcalculRam"><span class="keyword">val</span> calculRam</span> : <code class="type">int -><br>       int -><br>       Netlist_ast.arg -><br>       Netlist_ast.arg -><br>       Netlist_ast.arg -><br>       Netlist_ast.arg -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       'a Netlist_ast.Env.t -> 'a * Netlist_ast.value Netlist_ast.Env.t</code></pre><p>simulate an expression</p>
+
+<pre><span id="VALcalculExp"><span class="keyword">val</span> calculExp</span> : <code class="type">Netlist_ast.exp -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value * Netlist_ast.value Netlist_ast.Env.t</code></pre><p>simulate an equation</p>
+
+<pre><span id="VALdoEq"><span class="keyword">val</span> doEq</span> : <code class="type">Netlist_ast.Env.key * Netlist_ast.exp -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t -><br>       Netlist_ast.value Netlist_ast.Env.t * Netlist_ast.value Netlist_ast.Env.t *<br>       Netlist_ast.value Netlist_ast.Env.t * Netlist_ast.value Netlist_ast.Env.t</code></pre><p>print the results</p>
+
+<pre><span id="VALshowResults"><span class="keyword">val</span> showResults</span> : <code class="type">Netlist_ast.program -> Netlist_ast.value Netlist_ast.Env.t -> unit</code></pre><p>check input correctness</p>
+
+<pre><span id="VALcheckInput"><span class="keyword">val</span> checkInput</span> : <code class="type">string -> bool</code></pre><p>cast a char to a boolean</p>
+
+<pre><span id="VALcharToBool"><span class="keyword">val</span> charToBool</span> : <code class="type">char -> bool</code></pre><p>cast a string to a boolean array</p>
+
+<pre><span id="VALstringToArray"><span class="keyword">val</span> stringToArray</span> : <code class="type">string -> int -> bool array</code></pre><p>cast a string to a Value</p>
+
+<pre><span id="VALstringToValue"><span class="keyword">val</span> stringToValue</span> : <code class="type">string -> Netlist_ast.value</code></pre><p>read a user input</p>
+
+<pre><span id="VALaskInput"><span class="keyword">val</span> askInput</span> : <code class="type">Netlist_ast.Env.key -><br>       Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>read the user's value for the inputs</p>
+
+<pre><span id="VALaskForInputs"><span class="keyword">val</span> askForInputs</span> : <code class="type">Netlist_ast.Env.key list -><br>       Netlist_ast.value Netlist_ast.Env.t -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>exception handler</p>
+
+<pre><span id="VALcatchException"><span class="keyword">val</span> catchException</span> : <code class="type">exn -> 'a</code></pre><p>raise an integer n to the power of a</p>
+
+<pre><span id="VALpow"><span class="keyword">val</span> pow</span> : <code class="type">int -> int -> int</code></pre><p>cast an integer into a binary string</p>
+
+<pre><span id="VALintToBin"><span class="keyword">val</span> intToBin</span> : <code class="type">int -> int -> string</code></pre><p>init an empty memory</p>
+
+<pre><span id="VALinitMemEmpty"><span class="keyword">val</span> initMemEmpty</span> : <code class="type">int -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>init the RAM</p>
+
+<pre><span id="VALinitRAM"><span class="keyword">val</span> initRAM</span> : <code class="type">int -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>init the ROM (empty for the moment)</p>
+
+<pre><span id="VALinitROM"><span class="keyword">val</span> initROM</span> : <code class="type">int -> Netlist_ast.value Netlist_ast.Env.t</code></pre><p>simulate a netlist</p>
+
+<pre><span id="VALsimulator"><span class="keyword">val</span> simulator</span> : <code class="type">Netlist_ast.program -> int -> unit</code></pre><p>get a netlist program from a .net file and run the simulator on that program</p>
+
+<pre><span id="VALcompile"><span class="keyword">val</span> compile</span> : <code class="type">string -> unit</code></pre><p>parse the command line arguments before running the compile function</p>
+
+<pre><span id="VALmain"><span class="keyword">val</span> main</span> : <code class="type">unit -> unit</code></pre></body></html>

@@ -5,7 +5,7 @@ CACHES := __pycache__ $(CAROTTE_DIR)/__pycache__
 
 #temporary to fix some problems
 SIMU_DIR := ../netlist_simulator
-SIMU_NET := $(SIMU_DIR)/test
+SIMU_NET := $(SIMU_DIR)/bin/netlist_simulator.byte
 NET_DIR := net
 
 #for the moment it's just a test
@@ -54,13 +54,12 @@ print:
 
 ## run the netlist simulator on the netlist produced in main.py
 netlist: tofile
-	@echo $(BASE_NAME)
-	@bash test.sh test/net $(BASE_NAME)
+	@cd $(SIMU_DIR); make simulator
+	@./$(SIMU_NET) $(NET_DIR)/$(OUTPUT)
 
 ## Write the netlist to a file (OUTPUT=<filename> to specify the file)
 tofile: | netdir
 	$(PY) $(CAROTTE) -o $(NET_DIR)/$(OUTPUT) $(TARGET)
-	cp -r $(NET_DIR) $(SIMU_NET)/.
 
 netdir:
 	@mkdir -p $(NET_DIR)
