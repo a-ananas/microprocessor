@@ -1,4 +1,5 @@
 from lib_carotte import *
+import const
 
 
 def or32(a,b):
@@ -16,10 +17,10 @@ def xor32(a,b):
     assert(b.bus_size == 32)
     return Xor(a,b)
 
-def not32(a: Variable) -> Variable:
-    assert(a.bus_size == 32)
-    b = EquationVariable(32)
-    for i in range(32):
-        b[i] = ~a[i]
-    assert(b.bus_size == 32)
+def notn(a: Variable) -> Variable:
+    b = ~a[0]
+    for i in range(1,a.bus_size):
+        b = Concat(b,~a[i])
+    # print(b, b.__class__)
+    assert(b.bus_size == a.bus_size)
     return b

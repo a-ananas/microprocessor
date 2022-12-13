@@ -1,1 +1,3 @@
 # Projet microprocesseur
+
+LITTLE ENDIAN
