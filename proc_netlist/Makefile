@@ -9,6 +9,7 @@ NET_DIR := net
 
 #for the moment it's just a test
 TARGET ?= main.py
+
 BASE_NAME := $(basename $(TARGET))
 OUTPUT ?= $(BASE_NAME).net
 
