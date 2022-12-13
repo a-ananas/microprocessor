@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage[svgnames]{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{adjustbox}
+\usepackage{import}
+\usepackage{tcolorbox}
+\usepackage{newfloat}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{cmap}
+\usepackage{listings}
+
+\sloppy
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    }
+
+\title{TP1 : Simulateur de net-list}
+\author{Antoine Anastassiades}
+\date{16 novembre 2022}
+
+\begin{document}
+\maketitle
+
+Le simulateur de net-list est disponible sur \href{https://github.com/a-ananas/sysnum2022_tp1}{ce dépôt} et le projet original se trouve \href{https://github.com/hbens/sysnum-2022/tree/master/tp1}{ici}. Le contenu de ce rapport est accessible sur le dépôt et beaucoup d'informations sont répétées dans le fichier \texttt{README.md}.
+
+\section{Démarrage rapide}
+Après avoir cloné le dépôt, vous pouvez exécuter la commande \texttt{make} pour lancer le simulateur sur le test \texttt{test/fulladder.net}. Ajouter la variable \texttt{file=<fichier>} (sans préciser l'extension \texttt{.net}) lance la simulation sur le fichier en question. Une liste de tous les fichiers est disponible en lançant \texttt{make list}. La variable \texttt{n=<entier positif>} permet de contrôler le nombre de cycles sur lesquels le simulateur s'exécutera. Par exemple :
+\begin{lstlisting}[language=Bash]
+
+$ make file=ram n=2
+
+\end{lstlisting}
+
+lance sur le simulateur sur le programme \texttt{test/ram.net} pour 2 cycles puis s'arrête.
+
+\section{Fonctionnement du simulateur}
+
+Le simulateur utilise deux espaces de mémoires : un pour les valeurs modifiées lors du cycle actuel et un autre pour les valeurs du cycle précédents. Ceci est nécessaire pour que les registres n'induisent pas de cycle et que la valeur renvoyé ne soit pas déjà modifié lors du cycle actuel. Ceci a pour conséquence que l'écriture en RAM prend 1 cycle de retard. La RAM s'écrit sur une table de hachage qui prend en clés les bus sous forme de tableaux de booléens. La ROM est initialisée de la même façon, cependant je n'ai pas trouvé de façon d'initialiser la ROM à utiliser dans le programme.
+
+\section{Questionnements et difficultés}
+
+Les principales difficultés rencontrées étaient le fait d'essayer d'être le plus exhaustif possible sur les opérations réalisables. En effet, les opérations logiques que j'ai codé s'opèrent sur des valeurs de même type et de même taille. J'aurais pu faire en sorte que des opérations entre un bit et un bus soit réalisables. D'autre part, les registres utilisent un deuxième environnement de mémoire, mais j'aurais pu restructurer la programmation de l'ordre des équations afin que les opérations utilisant les registres arrivent en premier. Un autre problème est le rattrapage d'exception et notamment les entrées des programmes : la simulation s'interrompt à la moindre erreur de saisie, plutôt que de saisir l'erreur et demander une nouvelle saisie. Je devrais faire propager les exceptions au travers des différentes fonctions utilisées dans ma simulation.
+
+\end{document}
