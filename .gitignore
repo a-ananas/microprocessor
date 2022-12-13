@@ -4,6 +4,7 @@
 *.fls
 *.fdb_latexmk
 *.gz
+main.py
 
 __pycache__
 net/
