@@ -1,11 +1,11 @@
 from lib_carotte import *
 import sys
 sys.path.append("./alu")
-from arith import *
+from shift import *
 
 def main() -> None:
     '''Entry point of this example'''
-    a = Input(32)
-    b = Input(32)
-    (r,c) = sub32(a, b)
+    a = Input(8)
+#    b = Input(5)
+    r = sllk(a,2)
     r.set_as_output("r")
