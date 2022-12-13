@@ -6,8 +6,26 @@
 *.gz
 main.py
 
+# ocamlbuild working directory
+_build/
+bin/
+
+# ocamlbuild targets
+*.byte
+*.native
+
+# oasis generated files
+setup.data
+setup.log
+
+# Merlin configuring file for Vim and Emacs
+.merlin
+
+# Dune generated files
+*.install
+
+# Local OPAM switch
+_opam/
+
 __pycache__
 net/
-
-_build
-proc_netlist/netlist_simulator/test/_build
