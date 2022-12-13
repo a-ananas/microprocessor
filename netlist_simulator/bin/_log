@@ -1,0 +1,46 @@
+### Starting build.
+# Target: src/netlist_simulator.ml.depends, tags: { debug, extension:ml, file:src/netlist_simulator.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_simulator.ml > src/netlist_simulator.ml.depends
+# Target: src/netlist.ml.depends, tags: { debug, extension:ml, file:src/netlist.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist.ml > src/netlist.ml.depends
+# Target: src/netlist_lexer.mll, tags: { extension:mll, file:src/netlist_lexer.mll, lexer, ocaml, ocamllex, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamllex.opt -q src/netlist_lexer.mll
+# Target: src/netlist_lexer.ml.depends, tags: { debug, extension:ml, file:src/netlist_lexer.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_lexer.ml > src/netlist_lexer.ml.depends # cached
+# Target: src/netlist_parser.mly.depends, tags: { extension:mly, file:src/netlist_parser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet, traverse, use_menhir }
+menhir --raw-depend --ocamldep '/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules' src/netlist_parser.mly > src/netlist_parser.mly.depends
+# Target: src/netlist_ast.ml.depends, tags: { debug, extension:ml, file:src/netlist_ast.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_ast.ml > src/netlist_ast.ml.depends
+# Target: src/netlist_ast.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist_ast.cmo, file:src/netlist_ast.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist_ast.cmo src/netlist_ast.ml
+# Target: src/netlist_parser.mly, tags: { byte, compile, debug, extension:ml, extension:mly, file:src/netlist_parser.ml, file:src/netlist_parser.mly, infer, menhir, ocaml, parser, quiet, traverse, use_menhir }
+menhir --ocamlc '/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -g -I src' --infer src/netlist_parser.mly
+# Target: src/netlist_parser.mli.depends, tags: { extension:mli, file:src/netlist_parser.mli, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_parser.mli > src/netlist_parser.mli.depends # cached
+# Target: src/netlist_parser.cmi, tags: { byte, compile, extension:mli, file:src/netlist_parser.mli, interf, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -I src -o src/netlist_parser.cmi src/netlist_parser.mli # cached
+# Target: src/netlist_lexer.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist_lexer.cmo, file:src/netlist_lexer.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist_lexer.cmo src/netlist_lexer.ml # cached
+# Target: src/netlist_printer.ml.depends, tags: { debug, extension:ml, file:src/netlist_printer.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_printer.ml > src/netlist_printer.ml.depends
+# Target: src/netlist_printer.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist_printer.cmo, file:src/netlist_printer.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist_printer.cmo src/netlist_printer.ml
+# Target: src/scheduler.ml.depends, tags: { debug, extension:ml, file:src/scheduler.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/scheduler.ml > src/scheduler.ml.depends
+# Target: src/graph.ml.depends, tags: { debug, extension:ml, file:src/graph.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/graph.ml > src/graph.ml.depends
+# Target: src/graph.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/graph.cmo, file:src/graph.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/graph.cmo src/graph.ml
+# Target: src/netlist.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist.cmo, file:src/netlist.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist.cmo src/netlist.ml
+# Target: src/scheduler.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/scheduler.cmo, file:src/scheduler.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/scheduler.cmo src/scheduler.ml
+# Target: src/netlist_simulator.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist_simulator.cmo, file:src/netlist_simulator.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist_simulator.cmo src/netlist_simulator.ml
+# Target: src/netlist_parser.ml.depends, tags: { debug, extension:ml, file:src/netlist_parser.ml, ocaml, ocamldep, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamldep.opt -modules src/netlist_parser.ml > src/netlist_parser.ml.depends # cached
+# Target: src/netlist_parser.cmo, tags: { byte, compile, debug, extension:cmo, extension:ml, file:src/netlist_parser.cmo, file:src/netlist_parser.ml, implem, ocaml, quiet, traverse, use_menhir }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt -c -g -I src -o src/netlist_parser.cmo src/netlist_parser.ml # cached
+# Target: src/netlist_simulator.byte, tags: { byte, debug, dont_link_with, extension:byte, file:src/netlist_simulator.byte, link, ocaml, program, quiet, traverse, use_menhir, use_unix }
+/home/mrbigoudi/.opam/for-learn-ocaml/bin/ocamlc.opt unix.cma -g -I src src/netlist_ast.cmo src/netlist_parser.cmo src/netlist_lexer.cmo src/netlist_printer.cmo src/netlist.cmo src/graph.cmo src/scheduler.cmo src/netlist_simulator.cmo -o src/netlist_simulator.byte
+# Compilation successful.
