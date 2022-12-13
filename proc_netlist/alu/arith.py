@@ -10,6 +10,7 @@ def full_adder(a: Variable, b: Variable, c: Variable) -> typing.Tuple[Variable, 
 # sub = 1 if substraction
 def addn(a: Variable, b: Variable, sub: Variable) -> typing.Tuple[Variable, Variable]:
     assert(a.bus_size == b.bus_size)
+    assert(sub.bus_size == 1)
     l = a.bus_size
     (s,c) = full_adder(a[l-1],(b[l-1]^sub),sub)
     # Bit de poids faible à la fin

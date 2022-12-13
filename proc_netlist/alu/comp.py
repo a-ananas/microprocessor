@@ -1,13 +1,13 @@
 from lib_carotte import *
 from logic import xorn 
 
-def is_null_step(a: Variable) -> Variable :
+# intermediate function for the nulln function
+def null_step(a: Variable) -> Variable :
     assert(a.bus_size > 2)
     assert(a.bus_size % 2 == 0)
     n = a.bus_size
     tmp = a[0] | a[1]
     for i in range(1,n//2):
-        print(i)
         tmp = tmp + (a[2*i] | a[2*i+1])
     assert(tmp.bus_size == (n//2))
     return tmp
@@ -21,9 +21,9 @@ def nulln(a: Variable) -> Variable :
     if n == 2:
         return ~(a[0] | a[1])
     assert(a.bus_size%2 == 0)
-    tmp = is_null_step(a)
+    tmp = null_step(a)
     while tmp.bus_size > 2:
-        tmp = is_null_step(tmp)
+        tmp = null_step(tmp)
     assert(tmp.bus_size == 2)
     return ~(tmp[0] | tmp[1])
 
@@ -32,3 +32,51 @@ def nulln(a: Variable) -> Variable :
 def eqn(a: Variable, b: Variable) -> Variable :
     assert(a.bus_size == b.bus_size)
     return nulln(xorn(a, b))
+
+
+# intermediate function for the comparison function
+def compn_step(p: Variable, g: Variable) -> tuple[Variable, Variable] :
+    assert(p.bus_size == g.bus_size)
+    assert(p.bus_size > 1)
+    assert(p.bus_size % 2 == 0)
+    n = p.bus_size
+
+    # new_p = p[i]&p[i+1]
+    # new_g = g[i+1]|(g[i]&p[i+1]) 
+    new_p = p[n-1] & p[n-2]
+    new_g = g[n-2] | (g[n-1] & p[n-2])
+    i = n-3
+    # little endian
+    while i>0:
+        new_p = (p[i] & p[i-1]) + new_p
+        new_g = (g[i-1] | (g[i] & p[i-1])) + new_g
+        i = i-2
+    print(new_g.bus_size, n)
+    assert(new_g.bus_size == new_p.bus_size)
+    assert(new_g.bus_size == n//2)
+    return (new_p, new_g)
+
+# return a < b (<= if leq=1) where a and b naturals
+def ltn_natural(a: Variable, b: Variable, leq: Variable) -> Variable:
+    assert(a.bus_size == b.bus_size)
+    assert(leq.bus_size == 1)
+    l = a.bus_size
+    # little endian
+    (p,g) = (~a[l-1] ^ b[l-1], ~a[l-1] & b[l-1])
+    # trivial case
+    if l == 1:
+        return g[0] | p[0] & leq # leq = 1 -> <= else <
+
+    # init p and g
+    # p[i] = ~a[i]^b[i]
+    # g[i] = ~a[i]&b[i] 
+    for i in range(l-2,-1,-1):
+        p = (~a[i]^b[i]) + p
+        g = (~a[i]&b[i]) + g
+
+    # recursive call
+    while p.bus_size > 1:
+        (p,g) = compn_step(p, g)
+    assert(p.bus_size == 1)
+    return g[0] | p[0] & leq # leq = 1 -> <= else <
+
