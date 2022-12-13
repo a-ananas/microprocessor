@@ -85,7 +85,7 @@ test: $(TESTTARGET)
 
 
 ## Build the netlist simulator
-simulator: | bindir
+simulator: clean | bindir
 	@printf "\n${CYAN}Building simulator${RESET}\n"
 	@$(BUILD) $(BUILDFLAG) $(SRCDIR)/netlist_simulator.byte
 	@mv $(BINDIR)/$(SRCDIR)/netlist_simulator.byte $(BINDIR)/.
