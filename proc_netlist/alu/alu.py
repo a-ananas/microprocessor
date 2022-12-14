@@ -27,7 +27,7 @@ def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> V
     assert(or_op.bus_size == const.reg_size)
     assert(xor_op.bus_size == const.reg_size)
     assert(and_op.bus_size == const.reg_size)
-    assert(nop.bus_size == const.reg_size)
+    assert(no_op.bus_size == const.reg_size)
     
     # choose the correct operation according to opcode
     # op_4 op_3 op_2 op_1 op_0 || R
@@ -72,8 +72,8 @@ def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> V
           no_op,  no_op,  no_op,  no_op,
           no_op,  no_op,  no_op,  no_op]
 
-    tmp1 = utils.mux_16_to_1(list_input[0:16],  opcode[0:4])
-    tmp2 = utils.mux_16_to_1(list_input[16:32], opcode[0:4])
+    tmp1 = utils.mux_16_to_1(l[0:16],  opcode[0:4])
+    tmp2 = utils.mux_16_to_1(l[16:32], opcode[0:4])
 
     # return the result
     return Mux(opcode[4], tmp1, tmp2)
