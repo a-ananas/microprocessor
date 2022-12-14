@@ -12,9 +12,9 @@ def addn(a: Variable, b: Variable, sub: Variable) -> typing.Tuple[Variable, Vari
     assert(a.bus_size == b.bus_size)
     assert(sub.bus_size == 1)
     l = a.bus_size
-    (s,c) = full_adder(a[l-1],(b[l-1]^sub),sub)
+    (s,c) = full_adder(a[0],(b[0]^sub),sub)
     # Bit de poids faible à la fin
-    for i in range(l-2,-1,-1):
+    for i in range(1,l):
         (s_i, c) = full_adder(a[i],(b[i]^sub),c)
-        s = s_i + s
+        s = s + s_i
     return (s,c)

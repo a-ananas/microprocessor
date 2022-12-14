@@ -43,15 +43,12 @@ def compn_step(p: Variable, g: Variable) -> tuple[Variable, Variable] :
 
     # new_p = p[i]&p[i+1]
     # new_g = g[i+1]|(g[i]&p[i+1]) 
-    new_p = p[n-1] & p[n-2]
-    new_g = g[n-2] | (g[n-1] & p[n-2])
-    i = n-3
+    new_p = p[0] & p[1]
+    new_g = g[1] | (g[0] & p[1])
     # little endian
-    while i>0:
-        new_p = (p[i] & p[i-1]) + new_p
-        new_g = (g[i-1] | (g[i] & p[i-1])) + new_g
-        i = i-2
-    print(new_g.bus_size, n)
+    for i in range(1,n//2):
+        new_p = new_p + (p[2*i] & p[2*i+1])
+        new_g = new_g + (g[2*i+1] | (g[2*i] & p[2*i+1]))
     assert(new_g.bus_size == new_p.bus_size)
     assert(new_g.bus_size == n//2)
     return (new_p, new_g)
@@ -62,7 +59,7 @@ def ltn_natural(a: Variable, b: Variable, leq: Variable) -> Variable:
     assert(leq.bus_size == 1)
     l = a.bus_size
     # little endian
-    (p,g) = (~a[l-1] ^ b[l-1], ~a[l-1] & b[l-1])
+    (p,g) = (~a[0] ^ b[0], ~a[0] & b[0])
     # trivial case
     if l == 1:
         return g[0] | p[0] & leq # leq = 1 -> <= else <
@@ -70,13 +67,13 @@ def ltn_natural(a: Variable, b: Variable, leq: Variable) -> Variable:
     # init p and g
     # p[i] = ~a[i]^b[i]
     # g[i] = ~a[i]&b[i] 
-    for i in range(l-2,-1,-1):
-        p = (~a[i]^b[i]) + p
-        g = (~a[i]&b[i]) + g
+    for i in range(1,l):
+        p = p + (~a[i]^b[i])
+        g = g + (~a[i]&b[i])
 
     # recursive call
     while p.bus_size > 1:
         (p,g) = compn_step(p, g)
     assert(p.bus_size == 1)
-    return g[0] | p[0] & leq # leq = 1 -> <= else <
+    return g | (p & leq) # leq = 1 -> <= else <
 
