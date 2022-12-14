@@ -27,7 +27,6 @@ def nulln(a: Variable) -> Variable :
     assert(tmp.bus_size == 2)
     return ~(tmp[0] | tmp[1])
 
-
 # a == b -> not( (a[0] xor b[0]) + (a[1] xor b[1]) + ... )) == 1
 def eqn(a: Variable, b: Variable) -> Variable :
     assert(a.bus_size == b.bus_size)
@@ -46,9 +45,9 @@ def compn_step(p: Variable, g: Variable) -> tuple[Variable, Variable] :
     new_p = p[0] & p[1]
     new_g = g[1] | (g[0] & p[1])
     # little endian
-    for i in range(1,n//2):
-        new_p = new_p + (p[2*i] & p[2*i+1])
-        new_g = new_g + (g[2*i+1] | (g[2*i] & p[2*i+1]))
+    for i in range(2,n-1,2):
+        new_p = new_p + (p[i] & p[i+1])
+        new_g = new_g + (g[i+1] | (g[i] & p[i+1]))
     assert(new_g.bus_size == new_p.bus_size)
     assert(new_g.bus_size == n//2)
     return (new_p, new_g)
