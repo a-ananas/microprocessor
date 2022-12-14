@@ -7,29 +7,73 @@ import logic
 import utils
 import shift
 
-# return the format of an operation from an opcode
-def get_format(opcode: Variable) -> Variable:
-    #             s0 s1
-    # format R ->  0  0
-    # format U ->  1  0
-    # format I ->  0  1
-    assert(opcode.bus_size == 5)
-    s1 = (~opcode[3]) | (opcode[4] & opcode[2] & opcode[1] & opcode[0])
-    s0 = opcode[4] & opcode[3] & (~opcode[2])
-    format = s0 + s1
-    assert(format.bus_size == 2)
-    return s0+s1 
-
 
 # the main alu
-def alu(instr: Variable) -> Variable:
-    # get opcode
-    assert(instr.bus_size == 32)
-    opcode = instr[0:5]
+def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> Variable:
+    assert(status_reg.bus_size == const.reg_size)
+    assert(opcode.bus_size == const.opcode_size)
+    assert(i1.bus_size == const.reg_size)
+    assert(i2.bus_size == const.reg_size)
 
-    # get values according to opcode
-    format = get_format(opcode)
+    # get result of all the operations
+    (add_op, c_add) = arith.addn(i1, i2, Constant("0"))
+    (sub_op, c_sub) = arith.addn(i1, i2, Constant("1"))
+    or_op  = logic.orn(i1, i2)
+    xor_op = logic.xorn(i1, i2)
+    and_op = logic.andn(i1, i2)
+    no_op = const.c32b_0()
+    assert(add_op.bus_size == const.reg_size)
+    assert(sub_op.bus_size == const.reg_size)
+    assert(or_op.bus_size == const.reg_size)
+    assert(xor_op.bus_size == const.reg_size)
+    assert(and_op.bus_size == const.reg_size)
+    assert(nop.bus_size == const.reg_size)
+    
+    # choose the correct operation according to opcode
+    # op_4 op_3 op_2 op_1 op_0 || R
+    #    0    0    0    0    0 || add
+    #    0    0    0    0    1 || 
+    #    0    0    0    1    0 || srl
+    #    0    0    0    1    1 || sra
+    #    0    0    1    0    0 || sll
+    #    0    0    1    0    1 || and
+    #    0    0    1    1    0 || or
+    #    0    0    1    1    1 || xor
+    #    0    1    0    0    0 || add
+    #    0    1    0    0    1 || sub
+    #    0    1    0    1    0 || srl
+    #    0    1    0    1    1 || sra
+    #    0    1    1    0    0 || sll
+    #    0    1    1    0    1 || and
+    #    0    1    1    1    0 || or
+    #    0    1    1    1    1 || xor
+    #    1    0    0    0    0 || slt
+    #    1    0    0    0    1 || slt
+    #    1    0    0    1    0 || 
+    #    1    0    0    1    1 || beq
+    #    1    0    1    0    0 || bne
+    #    1    0    1    0    1 || blt
+    #    1    0    1    1    0 || blt
+    #    1    0    1    1    1 || bgr
+    #    1    1    0    0    0 || lui
+    #    1    1    0    0    1 || auipc
+    #    1    1    0    1    0 || 
+    #    1    1    0    1    1 || jal
+    #    1    1    1    0    0 || jalr
+    #    1    1    1    0    1 || 
+    #    1    1    1    1    0 || lw
+    #    1    1    1    1    1 || sw
+    l = [add_op,  no_op,  no_op,  no_op,
+          no_op, and_op,  or_op, xor_op,
+         add_op, sub_op,  no_op,  no_op,
+          no_op, and_op,  or_op, xor_op,
+          no_op,  no_op,  no_op,  no_op,
+          no_op,  no_op,  no_op,  no_op,
+          no_op,  no_op,  no_op,  no_op,
+          no_op,  no_op,  no_op,  no_op]
 
-    # do the operation according to opcode
+    tmp1 = utils.mux_16_to_1(list_input[0:16],  opcode[0:4])
+    tmp2 = utils.mux_16_to_1(list_input[16:32], opcode[0:4])
+
     # return the result
-    return format
+    return Mux(opcode[4], tmp1, tmp2)

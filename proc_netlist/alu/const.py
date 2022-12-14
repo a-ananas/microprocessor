@@ -17,3 +17,6 @@ c16b_1 = lambda : Constant(15*"0"+"1")
 
 c32b_0 = lambda : Constant(32*"0")
 c32b_1 = lambda : Constant(31*"0"+"1")
+
+reg_size = 32
+opcode_size = 5
