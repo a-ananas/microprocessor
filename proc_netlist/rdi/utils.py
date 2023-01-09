@@ -20,7 +20,7 @@ def get_address(old_rdi: Variable, selector: Variable, jump_enable: Variable, ne
     assert(std_next_rdi.bus_size == const.reg_size)
 
     # address for the next instruction if jump
-    jmp_next_rdi = Mux(jump_enable, new_rdi, std_next_rdi) # if branching condition not valid, then do not jump
+    jmp_next_rdi = Mux(jump_enable, std_next_rdi, new_rdi) # if branching condition not valid, then do not jump
     assert(jmp_next_rdi.bus_size == const.reg_size)
 
     return Mux(selector, std_next_rdi, jmp_next_rdi)
@@ -29,7 +29,7 @@ def get_address(old_rdi: Variable, selector: Variable, jump_enable: Variable, ne
 def test_eq_opcode(opcode: Variable, cst: Variable) -> Variable:
     assert(opcode.bus_size == const.opcode_size)
     assert(cst.bus_size == const.opcode_size)
-    return (~(opcode[0]^cst[0])) | (~(opcode[1]^cst[1])) | (~(opcode[2]^cst[2])) | (~(opcode[3]^cst[3])) | (~(opcode[4]^cst[4]))
+    return (~(opcode[0]^cst[0])) & (~(opcode[1]^cst[1])) & (~(opcode[2]^cst[2])) & (~(opcode[3]^cst[3])) & (~(opcode[4]^cst[4]))
 
 
 # return 1 if the instruction is a jump 0 otherwise
@@ -47,15 +47,15 @@ def get_selector(opcode: Variable) -> Variable:
     # if opcode = one of the above then 1 else 0
     selector = test_eq_opcode(opcode, Constant("11011"))
     assert(selector.bus_size == 1)
-    selector = logic.orn(selector, test_eq_opcode(opcode, Constant("00111")))
+    selector = selector | test_eq_opcode(opcode, Constant("00111"))
     assert(selector.bus_size == 1)
-    selector = logic.orn(selector, test_eq_opcode(opcode, Constant("11001")))
+    selector = selector | test_eq_opcode(opcode, Constant("11001"))
     assert(selector.bus_size == 1)
-    selector = logic.orn(selector, test_eq_opcode(opcode, Constant("00101")))
+    selector = selector | test_eq_opcode(opcode, Constant("00101"))
     assert(selector.bus_size == 1)
-    selector = logic.orn(selector, test_eq_opcode(opcode, Constant("10101")))
+    selector = selector | test_eq_opcode(opcode, Constant("10101"))
     assert(selector.bus_size == 1)
-    selector = logic.orn(selector, test_eq_opcode(opcode, Constant("11101")))
+    selector = selector | test_eq_opcode(opcode, Constant("11101"))
     assert(selector.bus_size == 1)
     return selector
 
@@ -67,7 +67,7 @@ def get_jump_enable(opcode: Variable, value_from_alu: Variable) -> Variable:
     assert(value_from_alu.bus_size == const.reg_size)
 
     # if jal or jalr then 1
-    unconditional_jump = logic.orn(test_eq_opcode(opcode, Constant("11011")), test_eq_opcode(opcode, Constant("00111")))
+    unconditional_jump = test_eq_opcode(opcode, Constant("11011")) | test_eq_opcode(opcode, Constant("00111"))
     # if condition, if value_from_alu = 1x32b then 1 else 0
     conditional_jump = comp.eqn(value_from_alu, Constant(const.reg_size*"1"))
 

@@ -64,8 +64,8 @@ def alu(opcode: Variable, i1: Variable, i2: Variable) -> Variable:
     #    0    1    1    0    1 || and
     #    0    1    1    1    0 || or
     #    0    1    1    1    1 || xor
-    #    1    0    0    0    0 || slt
-    #    1    0    0    0    1 || slt
+    #    1    0    0    0    0 || lw
+    #    1    0    0    0    1 || sw
     #    1    0    0    1    0 || 
     #    1    0    0    1    1 || beq
     #    1    0    1    0    0 || bne
@@ -78,8 +78,8 @@ def alu(opcode: Variable, i1: Variable, i2: Variable) -> Variable:
     #    1    1    0    1    1 || jal
     #    1    1    1    0    0 || jalr
     #    1    1    1    0    1 || 
-    #    1    1    1    1    0 || lw
-    #    1    1    1    1    1 || sw
+    #    1    1    1    1    0 || slt
+    #    1    1    1    1    1 || slt
 
     # choose the correct operation according to opcode
     l = [add_op,  no_op, srl_op, sra_op,
