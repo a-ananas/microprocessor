@@ -1,4 +1,5 @@
 (executable
- (public_name asm_microproc)
  (name main)
- (libraries syntax))
+ (libraries syntax)
+ (promote (until-clean))
+ (flags ()))

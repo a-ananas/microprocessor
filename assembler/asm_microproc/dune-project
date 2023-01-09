@@ -1,5 +1,6 @@
 (lang dune 3.5)
 (using menhir 2.0)
+(wrapped_executables false)
 
 (name asm_microproc)
 
@@ -20,7 +21,8 @@
  (name asm_microproc)
  (synopsis "Assembly processeur ")
  (description "A longer description")
- (depends ocaml dune ocamllex))
+ (depends ocaml dune ocamllex)
+ (allow_empty))
  ;(tags
   ;(topics "to describe" your project)))
 
