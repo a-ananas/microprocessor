@@ -12,10 +12,10 @@ def next_instr(old_rdi: Variable, opcode: Variable, value_from_alu: Variable, ne
     assert(value_from_alu.bus_size == reg_size)
     assert(new_rdi.bus_size == reg_size)
 
-    selector = utils.get_selector(opcode)
-    assert(selector.bus_size == 1)
+    instr_is_jmp = utils.get_instr_is_jmp(opcode)
+    assert(instr_is_jmp.bus_size == 1)
 
-    jump_enable = utils.get_jump_enable(opcode, value_from_alu)
-    assert(jump_enable.bus_size == 1)
+    jmp_cond_fullfiled = utils.get_jmp_cond_fullfiled(opcode, value_from_alu)
+    assert(jmp_cond_fullfiled.bus_size == 1)
 
-    return utils.get_address(old_rdi, selector, jump_enable, new_rdi)
+    return utils.get_address(old_rdi, instr_is_jmp, jmp_cond_fullfiled, new_rdi)
