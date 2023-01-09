@@ -1,6 +1,6 @@
 from lib_carotte import *
-import arith
-import logic
+from . import arith
+from . import logic
 
 def two_complements_n(a: Variable) -> Variable:
     b = logic.notn(a)

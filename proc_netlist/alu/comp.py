@@ -1,5 +1,5 @@
 from lib_carotte import *
-from logic import xorn 
+from . import logic
 
 # intermediate function for the nulln function
 def null_step(a: Variable) -> Variable :
@@ -30,7 +30,7 @@ def nulln(a: Variable) -> Variable :
 # a == b -> not( (a[0] xor b[0]) + (a[1] xor b[1]) + ... )) == 1
 def eqn(a: Variable, b: Variable) -> Variable :
     assert(a.bus_size == b.bus_size)
-    return nulln(xorn(a, b))
+    return nulln(logic.xorn(a, b))
 
 
 # intermediate function for the comparison function

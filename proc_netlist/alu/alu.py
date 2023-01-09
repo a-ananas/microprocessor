@@ -1,22 +1,15 @@
 from lib_carotte import *
 
-import arith
-import comp
-import const
-import logic
-import utils
-import shift
+from . import arith
+from . import comp
+from . import const
+from . import logic
+from . import utils
+from . import shift
 
 
 # the main alu
-def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> tuple[Variable,Variable]:
-    # status reg = ZCNOJxxx xxxxxxxx xxxxxxxx xxxxxxxx
-    # Z -> zero flag
-    # C -> carry flag
-    # N -> negative flag
-    # O -> overflow flag
-    # x -> useless
-    assert(status_reg.bus_size == const.reg_size)
+def alu(opcode: Variable, i1: Variable, i2: Variable) -> Variable:
     assert(opcode.bus_size == const.opcode_size)
     assert(i1.bus_size == const.reg_size)
     assert(i2.bus_size == const.reg_size)
@@ -27,6 +20,14 @@ def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> t
     or_op  = logic.orn(i1, i2)
     xor_op = logic.xorn(i1, i2)
     and_op = logic.andn(i1, i2)
+    srl_op = shift.srln(i1, i2)
+    sra_op = shift.sran(i1, i2)
+    sll_op = shift.slln(i1, i2)
+
+    # for branchment/jumps, return 0 if should jump, 1 otherwise (extended to 32 bits)
+    # we'll get the address where to jump in the rdi module using the immediate from di
+    jal_op = const.c32b_1()
+    jalr_op = const.c32b_1()
 
     eq_op  = comp.eqn(i1, i2)
     beq_op = Mux(eq_op, const.c32b_0(), const.c32b_1())
@@ -34,10 +35,6 @@ def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> t
     bne_op = Mux(neq_op, const.c32b_0(), const.c32b_1()) 
     lt_op  = comp.ltn_natural(i1, i1, const.c1b_1())
     blt_op = Mux(lt_op, const.c32b_0(), const.c32b_1())
-    # leq_op = comp.ltn_natural(i1, i1, Constant("1"))
-    # ble_op = Mux(leq_op, const.c32b_0(), const.c32b_1())
-    # gt_op  = ~leq_op
-    # bgt_op = Mux(gt_op, const.c32b_0(), const.c32b_1())
     geq_op = ~lt_op
     bge_op = Mux(geq_op, const.c32b_0(), const.c32b_1())
 
@@ -85,20 +82,19 @@ def alu(status_reg: Variable, opcode: Variable, i1: Variable, i2: Variable) -> t
     #    1    1    1    1    1 || sw
 
     # choose the correct operation according to opcode
-    l = [add_op,  no_op,  no_op,  no_op,
-          no_op, and_op,  or_op, xor_op,
-         add_op, sub_op,  no_op,  no_op,
-          no_op, and_op,  or_op, xor_op,
+    l = [add_op,  no_op, srl_op, sra_op,
+         sll_op, and_op,  or_op, xor_op,
+         add_op, sub_op, srl_op, sra_op,
+         sll_op, and_op,  or_op, xor_op,
           no_op,  no_op,  no_op, beq_op,
          bne_op, blt_op, blt_op, bge_op,
-          no_op,  no_op,  no_op,  no_op,
+          no_op,  no_op, jal_op, jalr_op,
           no_op,  no_op,  no_op,  no_op]
 
     tmp1 = utils.mux_16_to_1(l[0:16],  opcode[0:4])
     tmp2 = utils.mux_16_to_1(l[16:32], opcode[0:4])
 
     res = Mux(opcode[4], tmp1, tmp2)
-    status_reg = status_reg #for now
 
     # return the result
-    return (res,status_reg)
+    return res
