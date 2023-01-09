@@ -72,3 +72,18 @@ def mux_16_to_1(list_input, select: Variable) -> Variable:
     tmp4 = mux_4_to_1(list_input[12], list_input[13], list_input[14], list_input[15], select[0:2])
 
     return mux_4_to_1(tmp1, tmp2, tmp3, tmp4, select[2:4])
+
+
+def is_0(input):
+    n = 32
+    assert input.bus_size == n
+    s = Constant("0")
+    for i in range(n):
+        s = Or(s,input[i])
+    return Not(s)
+    
+
+def is_neg(input):
+    assert input.bus_size == n
+    return input[31]
+    #32 bit entry 1 bit output
