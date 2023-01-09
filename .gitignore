@@ -9,7 +9,7 @@ proc_netlist/main.py
 
 # ocamlbuild working directory
 _build/
-bin/
+netlist_simulator/bin/
 
 # ocamlbuild targets
 *.byte
