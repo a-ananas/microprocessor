@@ -30,3 +30,6 @@ _opam/
 
 __pycache__
 net/
+
+assembler/asm 
+assembler/asm_microproc/bin/main.exe

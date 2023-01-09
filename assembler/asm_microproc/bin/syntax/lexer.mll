@@ -74,7 +74,7 @@ let integer = '0' | (['1'-'9']digit*)
 let character = ['a'-'z']
 
 (* registers syntax -> xN with N from 0 to 16*)
-let register = 'x'digit | "x1"['0'-'6']
+let register = 'x'digit | 'x''1'['0'-'6']
 
 (* lexing the tokens *)
 rule token = parse 
