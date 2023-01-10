@@ -1,5 +1,5 @@
 from lib_carotte import *
-import const
+from . import const
 
 def orn(a: Variable, b: Variable) -> Variable:
     assert(a.bus_size == b.bus_size)
