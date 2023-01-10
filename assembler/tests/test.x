@@ -1,7 +1,7 @@
 LAB:
-addi x0 40 x15
+addi x15 x0 40 
 #Attention les reg vont jusqu'à 15 !
-add x0 x1 x15
-addi x0 -1 x15
-jal LAB x8
-addi x0 -1 x15
+add x15 x0 x1
+addi x15 x0 -1 
+jal x8 LAB
+addi x15 x0 -1 

@@ -31,11 +31,11 @@ file:
 
 instr:
   /* we take the first register as inputs and the last is the destination */
-  | opc = opr rs1 = REG rs2 = REG rd = REG {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd))}
-  | opc = opi rs = REG imm = IMM rd = REG {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Imm(imm), rd))}
-  | opc = opi rs = REG lab = LABEL rd = REG {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Label(lab, !addr_counter), rd))}
-  | opc = opu imm = IMM rd = REG {addr_counter := !addr_counter + 1 ; Instr(U(opc, Imm(imm), rd))}
-  | opc = opu lab = LABEL rd = REG {addr_counter := !addr_counter + 1 ; Instr(U(opc, Label(lab, !addr_counter), rd))}
+  | opc = opr rd = REG rs1 = REG rs2 = REG {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd))}
+  | opc = opi rd = REG rs = REG imm = IMM {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Imm(imm), rd))}
+  | opc = opi rd = REG rs = REG lab = LABEL {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Label(lab, !addr_counter), rd))}
+  | opc = opu rd = REG imm = IMM {addr_counter := !addr_counter + 1 ; Instr(U(opc, Imm(imm), rd))}
+  | opc = opu rd = REG lab = LABEL {addr_counter := !addr_counter + 1 ; Instr(U(opc, Label(lab, !addr_counter), rd))}
   | lab = LABEL END_LABEL {Instr(Lab_def(lab, !addr_counter+1))}
 ;
 

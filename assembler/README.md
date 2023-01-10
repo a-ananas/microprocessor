@@ -1,10 +1,12 @@
 # Assembler RISC-V 
 ## Syntax :
-* R : `instr rs1 rs2 rd`
-* I : `instr rs imm rd`
-* U : `instr imm rd`
+* R : `instr rd rs1 rs2`
+* I : `instr rd rs imm`
+* U : `instr rd imm`
     > Comments starting by `#`
     > Labels are strings of chars and digits followed by a `:`
+
+So the syntax is first the register output, then the two registers or register immediate or immediate/label.
 
 ## Compilation: 
 Run `make compiler` to create an executable named `asm`. It runs then on files with name of the format `file.x` (because its cool :sunglasses:).
