@@ -39,23 +39,29 @@
       "slti",  SLTI "11111";
     ]
 
+  (* useful function to make powers of 2 *)
+  let rec pow2 = function
+    | 0 -> 1
+    | n -> 2*(pow2 (n-1))
+
     (* convert a integer to a binary string in little endian *)
-    let int_to_binary i = 
-      let inp = ref i in
+    let int_to_binary i n = 
+      let pow = pow2 n in
+      let inp = if i >= 0 then ref i else ref (pow+i mod pow) in
       let s = ref "" in
       let p = ref 1 in 
-      for _ = 1 to 5 do
+      for _ = 1 to n do
         p := !p * 2;
         if !inp mod !p = 0 then s := (!s)^"0" else s := (!s)^"1";
         inp := !inp - (!inp mod !p)
-  done;
+      done;
   !s;;
 
   let manage_instr =
     let h = Hashtbl.create 32 in
     List.iter (fun (key, token) -> Hashtbl.add h key token) instr_tbl;
     (* create the registers 0 -> 16 with a binary address in a string*)
-    let regs = List.init 16 (fun i -> ("x"^(string_of_int i), (REG(int_to_binary i)))) in 
+    let regs = List.init 16 (fun i -> ("x"^(string_of_int i), (REG(int_to_binary i 5)))) in 
     List.iter (fun (key, token) -> Hashtbl.add h key token) regs;
     fun key -> 
       try Hashtbl.find h key with _ -> raise(Lexing_error "Ca marche pas le mot là")
@@ -68,7 +74,7 @@ let space = [' ' '\t' '\r']
 let digit = ['0'-'9']
 
 (* integers *)
-let integer = '0' | (['1'-'9']digit*)
+let integer = '0' | ('-'?['1'-'9']digit*)
 
 (* characters *)
 let character = ['a'-'z']
@@ -82,7 +88,7 @@ rule token = parse
   | '#' [^ '\n']*       {token lexbuf}
   | '#' [^ '\n']* eof   {EOF}
   | space+              {token lexbuf}
-  | integer as i        {IMM (int_to_binary (int_of_string i))}
+  | integer as i        {IMM (int_to_binary (int_of_string i) 16)}
   | character+ as instr {manage_instr instr}
   | register as rg      {manage_instr rg}
   | eof                 {EOF}
