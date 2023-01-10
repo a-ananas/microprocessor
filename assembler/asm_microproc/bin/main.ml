@@ -32,10 +32,26 @@ let () =
   let c = open_in file in 
   let lb = Lexing.from_channel c in 
   try 
-    let _parsed_ast = Parser.file Lexer.token lb in 
+    let parsed_ast = Parser.file Lexer.token lb in 
     begin 
       close_in c;
       if !parse_only then exit 0
+      else 
+        begin
+          let output_file = (Filename.remove_extension file)^".i" in
+          let oc = open_out output_file in
+          let list_instr = match parsed_ast with 
+            | File(instrl) -> instrl
+          in
+          (* WARNING : need to fill the immediates at some point with enough zeros *)
+          let rec ast_to_string = function
+            | [] -> close_out oc
+            | Ast.Instr(Ast.R(Ast.Opc(sopc), rs1, rs2, rd))::ist -> Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (String.make 12 '0') ; ast_to_string ist
+            | Ast.Instr(I(Opc(sopc), rs, imm, rd))::ist -> Printf.fprintf oc "%s%s%s%s\n" sopc rd rs imm ; ast_to_string ist
+            | Ast.Instr(U(Opc(sopc), imm, rd))::ist -> Printf.fprintf oc "%s%s%s\n" sopc rd imm ; ast_to_string ist
+          in
+          ast_to_string list_instr
+        end 
     end
   with 
   | Lexer.Lexing_error(s) -> 

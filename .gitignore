@@ -33,3 +33,4 @@ net/
 
 assembler/asm 
 assembler/asm_microproc/bin/main.exe
+assembler/tests/*.i
