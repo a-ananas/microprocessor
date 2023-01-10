@@ -1,21 +1,26 @@
 from lib_carotte import *
-import const
+from . import const
 
+def orn(a: Variable, b: Variable) -> Variable:
+    assert(a.bus_size == b.bus_size)
+    r = a[0] | b[0]
+    for i in range(1, a.bus_size):
+        r = r + (a[i] | b[i])
+    return r
 
-def or32(a,b):
-    assert(a.bus_size == 32)
-    assert(b.bus_size == 32)
-    return Or(a,b)
+def andn(a,b):
+    assert(a.bus_size == b.bus_size)
+    r = a[0] & b[0]
+    for i in range(1, a.bus_size):
+        r = r + (a[i] & b[i])
+    return r
 
-def and32(a,b):
-    assert(a.bus_size == 32)
-    assert(b.bus_size == 32)
-    return And(a,b)
-
-def xor32(a,b):
-    assert(a.bus_size == 32)
-    assert(b.bus_size == 32)
-    return Xor(a,b)
+def xorn(a,b):
+    assert(a.bus_size == b.bus_size)
+    r = a[0] ^ b[0]
+    for i in range(1, a.bus_size):
+        r = r + (a[i] ^ b[i])
+    return r
 
 def notn(a: Variable) -> Variable:
     b = ~a[0]

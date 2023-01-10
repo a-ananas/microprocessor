@@ -4,11 +4,12 @@
 *.fls
 *.fdb_latexmk
 *.gz
-main.py
+
+proc_netlist/main.py
 
 # ocamlbuild working directory
 _build/
-bin/
+netlist_simulator/bin/
 
 # ocamlbuild targets
 *.byte
@@ -29,3 +30,7 @@ _opam/
 
 __pycache__
 net/
+
+assembler/asm 
+assembler/asm_microproc/bin/main.exe
+assembler/tests/*.i

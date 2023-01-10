@@ -1,0 +1,29 @@
+(lang dune 3.5)
+(using menhir 2.0)
+(wrapped_executables false)
+
+(name asm_microproc)
+
+;(generate_opam_files true)
+
+(source
+ (github a-ananas/microprocessor))
+
+;(authors "Author Name")
+
+;(maintainers "Maintainer Name")
+
+;(license LICENSE)
+
+;(documentation https://url/to/documentation)
+
+(package
+ (name asm_microproc)
+ (synopsis "Assembly processeur ")
+ (description "A longer description")
+ (depends ocaml dune ocamllex)
+ (allow_empty))
+ ;(tags
+  ;(topics "to describe" your project)))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
