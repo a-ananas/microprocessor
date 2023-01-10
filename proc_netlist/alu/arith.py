@@ -1,7 +1,7 @@
 from lib_carotte import *
-import const
-import logic
-import utils
+from . import const
+from . import logic
+from . import utils
 
 def full_adder(a: Variable, b: Variable, c: Variable) -> typing.Tuple[Variable, Variable]:
     tmp = a^b
