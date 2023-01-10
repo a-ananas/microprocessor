@@ -5,6 +5,7 @@ TEST_FILE := test.x
 TEST_OUTPUT := test.i
 TARGET := main.exe
 EXEC := asm
+PYTHON_SCRIPT := format_output.py
 
 .PHONY = clean compiler
 
@@ -22,8 +23,7 @@ tests: compiler
 	@printf "%%%% Testing %%%%\n"
 	./asm $(TESTS_FOLDER)/$(TEST_FILE)
 	@printf "\nThe assembly code: \n"
-	@printf "\nThe assembly code: \n"
 	@cat $(TESTS_FOLDER)/$(TEST_FILE)
 	@printf "\n------------\n"
 	@printf "\nThe produced addreses: \n"
-	@cat $(TESTS_FOLDER)/$(TEST_OUTPUT)
+	@python3 $(PYTHON_SCRIPT)
