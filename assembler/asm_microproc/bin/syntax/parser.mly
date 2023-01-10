@@ -40,16 +40,21 @@ instr:
 ;
 
 %inline opr: 
-  | s = ADD {Opc(s)}
-  | s = SUB {Opc(s)}
-  | s = SLL {Opc(s)}
-  | s = SRL {Opc(s)}
-  | s = SRA {Opc(s)}
-  | s = AND {Opc(s)}
-  | s = OR  {Opc(s)}
-  | s = XOR {Opc(s)}
-  | s = SLT {Opc(s)}
-  | s = SW  {Opc(s)};
+  | s = ADD  {Opc(s)}
+  | s = SUB  {Opc(s)}
+  | s = SLL  {Opc(s)}
+  | s = SRL  {Opc(s)}
+  | s = SRA  {Opc(s)}
+  | s = AND  {Opc(s)}
+  | s = OR   {Opc(s)}
+  | s = XOR  {Opc(s)}
+  | s = SLT  {Opc(s)}
+  | s = SW   {Opc(s)}
+  | s = BEQ  {Opc(s)}
+  | s = BNE  {Opc(s)}
+  | s = BLT  {Opc(s)}
+  | s = BLTI {Opc(s)}
+  | s = BGE  {Opc(s)};
  
 %inline opi: 
   | s = ADDI {Opc(s)}
@@ -60,12 +65,7 @@ instr:
   | s = ORI  {Opc(s)}
   | s = XORI {Opc(s)}
   | s = SLTI {Opc(s)}
-  | s = LW   {Opc(s)}
-  | s = BEQ  {Opc(s)}
-  | s = BNE  {Opc(s)}
-  | s = BLT  {Opc(s)}
-  | s = BLTI {Opc(s)}
-  | s = BGE  {Opc(s)};
+  | s = LW   {Opc(s)};
 
 %inline opu:
   | s = LUI   {Opc(s)}
