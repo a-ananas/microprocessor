@@ -68,7 +68,7 @@ def get_jmp_cond_fullfiled(opcode: Variable, value_from_alu: Variable) -> Variab
     assert(opcode.bus_size == const.opcode_size)
     assert(value_from_alu.bus_size == const.reg_size)
 
-    conditional_jump = comp.eqn(value_from_alu, Constant(const.reg_size*"1"))
+    conditional_jump = comp.eqn(value_from_alu, const.c32b_1())
     assert(conditional_jump.bus_size == 1)
 
     return conditional_jump
