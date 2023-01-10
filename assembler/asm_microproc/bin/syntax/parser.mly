@@ -1,5 +1,11 @@
 %{
   open Ast
+
+  let augment_imm imm n = 
+    let len = String.length imm in
+    let sign_bit = imm.[len - 1] in
+    imm ^ (String.make (n - len) sign_bit)
+
 %}
 
 /* EVERYTHING SHALL BE LITTLE ENDIAN */
@@ -25,8 +31,8 @@ file:
 instr:
   /* we take the first register as inputs and the last is the destination */
   | opc = opr rs1 = REG rs2 = REG rd = REG {Instr(R(opc, rs1, rs2, rd))}
-  | opc = opi rs = REG imm = IMM rd = REG {Instr(I(opc, rs, imm, rd))}
-  | opc = opu imm = IMM rd = REG {Instr(U(opc, imm, rd))}
+  | opc = opi rs = REG imm = IMM rd = REG {Instr(I(opc, rs, (augment_imm imm 17), rd))}
+  | opc = opu imm = IMM rd = REG {Instr(U(opc, (augment_imm imm 22), rd))}
 ;
 
 %inline opr: 

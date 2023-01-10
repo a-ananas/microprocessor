@@ -1,5 +1,8 @@
 BIN_FOLDER := asm_microproc/bin
 SYNTAX_FOLDER := $(BIN_FOLDER)/syntax
+TESTS_FOLDER := tests
+TEST_FILE := test.x
+TEST_OUTPUT := test.i
 TARGET := main.exe
 EXEC := asm
 
@@ -17,9 +20,10 @@ clean:
 
 tests: compiler
 	@printf "%%%% Testing %%%%\n"
-	./asm tests/test.x
+	./asm $(TESTS_FOLDER)/$(TEST_FILE)
 	@printf "\nThe assembly code: \n"
-	@cat tests/test.x
+	@printf "\nThe assembly code: \n"
+	@cat $(TESTS_FOLDER)/$(TEST_FILE)
 	@printf "\n------------\n"
 	@printf "\nThe produced addreses: \n"
-	@cat tests/test.i
+	@cat $(TESTS_FOLDER)/$(TEST_OUTPUT)
