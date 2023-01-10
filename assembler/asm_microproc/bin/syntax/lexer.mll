@@ -64,7 +64,7 @@
     let regs = List.init 16 (fun i -> ("x"^(string_of_int i), (REG(int_to_binary i 5)))) in 
     List.iter (fun (key, token) -> Hashtbl.add h key token) regs;
     fun key -> 
-      try Hashtbl.find h key with _ -> raise(Lexing_error "Ca marche pas le mot là")
+      try Hashtbl.find h key with _ -> LABEL key
 }
 
 (* white spaces *)
@@ -77,7 +77,7 @@ let digit = ['0'-'9']
 let integer = '0' | ('-'?['1'-'9']digit*)
 
 (* characters *)
-let character = ['a'-'z']
+let character = ['a'-'z' 'A'-'Z' '_' '0'-'9']
 
 (* registers syntax -> xN with N from 0 to 16*)
 let register = 'x'digit | 'x''1'['0'-'6']
@@ -88,8 +88,10 @@ rule token = parse
   | '#' [^ '\n']*       {token lexbuf}
   | '#' [^ '\n']* eof   {EOF}
   | space+              {token lexbuf}
-  | integer as i        {IMM (int_to_binary (int_of_string i) 16)}
+  | integer as i        {IMM (int_of_string i)}
   | character+ as instr {manage_instr instr}
   | register as rg      {manage_instr rg}
+  | character+ as c     {manage_instr c}
+  | ':'                 {END_LABEL}
   | eof                 {EOF}
   | _ as c              {raise(Lexing_error ("illegal char : "^(String.make 1 c)))}

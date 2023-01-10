@@ -2,8 +2,9 @@
 ## Syntax :
 * R : `instr rs1 rs2 rd`
 * I : `instr rs imm rd`
-* R : `instr imm rd`
+* U : `instr imm rd`
     > Comments starting by `#`
+    > Labels are strings of chars and digits followed by a `:`
 
 ## Compilation: 
 Run `make compiler` to create an executable named `asm`. It runs then on files with name of the format `file.x` (because its cool :sunglasses:).

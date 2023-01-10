@@ -28,6 +28,15 @@ let report (b, e) =
   let lc = e.pos_cnum - b.pos_bol + 1 in 
   Format.eprintf "Fichier \"%s\" ligne %d characteres %d-%d :\n" file l fc lc 
 
+(* finding the correct offset to jump -> replace the label with the offset *)
+let find_offset_diff lst_instr lab instr_ofs = 
+  let lab_ofs = List.find_map (fun a -> 
+    match a with 
+      | Ast.Instr(Lab_def(lab_name, lab_ofs)) when lab_name = lab -> Some(lab_ofs)
+      | _ -> None)
+    lst_instr in 
+  match lab_ofs with Some(n) -> 4*(n - instr_ofs) | None -> failwith "erreur dans l'offset d'un jump"
+
 let () =
   let c = open_in file in 
   let lb = Lexing.from_channel c in 
@@ -43,12 +52,22 @@ let () =
           let list_instr = match parsed_ast with 
             | File(instrl) -> instrl
           in
+          let ref_list = ref list_instr in
           (* WARNING : need to fill the immediates at some point with enough zeros *)
           let rec ast_to_string = function
             | [] -> close_out oc
-            | Ast.Instr(Ast.R(Ast.Opc(sopc), rs1, rs2, rd))::ist -> Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (String.make 12 '0') ; ast_to_string ist
-            | Ast.Instr(I(Opc(sopc), rs, imm, rd))::ist -> Printf.fprintf oc "%s%s%s%s\n" sopc rd rs imm ; ast_to_string ist
-            | Ast.Instr(U(Opc(sopc), imm, rd))::ist -> Printf.fprintf oc "%s%s%s\n" sopc rd imm ; ast_to_string ist
+            | Ast.Instr(R(Opc(sopc), rs1, rs2, rd))::ist ->
+                Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (String.make 12 '0') ; ast_to_string ist
+            | Ast.Instr(I(Opc(sopc), rs, Imm(imm), rd))::ist ->
+                Printf.fprintf oc "%s%s%s%s\n" sopc rd rs (Lexer.int_to_binary imm 17) ; ast_to_string ist 
+            | Ast.Instr(I(Opc(sopc), rs, Label(lab, instr_ofs), rd))::ist -> 
+                Printf.fprintf oc "%s%s%s%s\n" sopc rd rs (Lexer.int_to_binary (find_offset_diff !ref_list lab instr_ofs) 17) ; ast_to_string ist
+            | Ast.Instr(U(Opc(sopc), Imm(imm), rd))::ist ->
+                Printf.fprintf oc "%s%s%s\n" sopc rd (Lexer.int_to_binary imm 22) ; ast_to_string ist
+            | Ast.Instr(U(Opc(sopc), Label(lab, instr_ofs), rd))::ist ->
+                Printf.fprintf oc "%s%s%s\n" sopc rd (Lexer.int_to_binary (find_offset_diff !ref_list lab instr_ofs) 22) ; ast_to_string ist
+            | Ast.Instr(Lab_def(lab, addr))::ist ->
+                () ; ast_to_string ist
           in
           ast_to_string list_instr
         end 

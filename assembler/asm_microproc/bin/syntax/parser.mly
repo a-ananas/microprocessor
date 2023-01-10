@@ -1,10 +1,7 @@
 %{
   open Ast
 
-  let augment_imm imm n = 
-    let len = String.length imm in
-    let sign_bit = imm.[len - 1] in
-    imm ^ (String.make (n - len) sign_bit)
+  let addr_counter = ref 0
 
 %}
 
@@ -14,7 +11,11 @@
 /* registers addresses that are strings */
 %token <string> REG
 /* immediates in binary representation */
-%token <string> IMM
+%token <int> IMM
+/* labels names */
+%token <string> LABEL
+/*  colon for end of label definition */
+%token END_LABEL
 /* manage the end of file */
 %token EOF
 
@@ -30,9 +31,12 @@ file:
 
 instr:
   /* we take the first register as inputs and the last is the destination */
-  | opc = opr rs1 = REG rs2 = REG rd = REG {Instr(R(opc, rs1, rs2, rd))}
-  | opc = opi rs = REG imm = IMM rd = REG {Instr(I(opc, rs, (augment_imm imm 17), rd))}
-  | opc = opu imm = IMM rd = REG {Instr(U(opc, (augment_imm imm 22), rd))}
+  | opc = opr rs1 = REG rs2 = REG rd = REG {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd))}
+  | opc = opi rs = REG imm = IMM rd = REG {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Imm(imm), rd))}
+  | opc = opi rs = REG lab = LABEL rd = REG {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Label(lab, !addr_counter), rd))}
+  | opc = opu imm = IMM rd = REG {addr_counter := !addr_counter + 1 ; Instr(U(opc, Imm(imm), rd))}
+  | opc = opu lab = LABEL rd = REG {addr_counter := !addr_counter + 1 ; Instr(U(opc, Label(lab, !addr_counter), rd))}
+  | lab = LABEL END_LABEL {Instr(Lab_def(lab, !addr_counter+1))}
 ;
 
 %inline opr: 
@@ -42,10 +46,10 @@ instr:
   | s = SRL {Opc(s)}
   | s = SRA {Opc(s)}
   | s = AND {Opc(s)}
-  | s = OR {Opc(s)}
+  | s = OR  {Opc(s)}
   | s = XOR {Opc(s)}
   | s = SLT {Opc(s)}
-  | s = SW {Opc(s)};
+  | s = SW  {Opc(s)};
  
 %inline opi: 
   | s = ADDI {Opc(s)}
@@ -53,18 +57,18 @@ instr:
   | s = SRLI {Opc(s)}
   | s = SRAI {Opc(s)}
   | s = ANDI {Opc(s)}
-  | s = ORI {Opc(s)}
+  | s = ORI  {Opc(s)}
   | s = XORI {Opc(s)}
   | s = SLTI {Opc(s)}
-  | s = LW {Opc(s)}
-  | s = BEQ {Opc(s)}
-  | s = BNE {Opc(s)}
-  | s = BLT {Opc(s)}
+  | s = LW   {Opc(s)}
+  | s = BEQ  {Opc(s)}
+  | s = BNE  {Opc(s)}
+  | s = BLT  {Opc(s)}
   | s = BLTI {Opc(s)}
-  | s = BGE {Opc(s)};
+  | s = BGE  {Opc(s)};
 
 %inline opu:
-  | s = LUI {Opc(s)}
+  | s = LUI   {Opc(s)}
   | s = AUIPC {Opc(s)}
-  | s = JAL {Opc(s)}
-  | s = JALR {Opc(s)};
+  | s = JAL   {Opc(s)}
+  | s = JALR  {Opc(s)};
