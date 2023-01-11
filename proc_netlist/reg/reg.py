@@ -6,8 +6,13 @@ def reg(opcode: Variable, imm: Variable, rs1: Variable, rs2: Variable, rd: Varia
     # get real wdata
     wdata = utils.get_wdata(opcode, value_from_alu, value_from_ram)
 
+    # get values to read
+    i1 = utils.get_value_from_reg(rs1)
+    i2_from_reg = utils.get_value_from_reg(rs2)
+    # get real i2, mux if format I then immediate else value read from register
+    i2 = utils.get_i2(opcode, imm, i2_from_reg)
+
+    # write new datas in registers
+    utils.write_value_in_reg(rd, wdata, wenable)
     
-    # get real i2
-    real_i2 = utils.get_i2(opcode, imm, i2_from_reg)
-    
-    return
+    return (i1, i2)

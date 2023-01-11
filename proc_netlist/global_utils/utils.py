@@ -8,12 +8,12 @@ def And5(a,b,c,d,e):
 
 
 # test if an opcode is equal to a given variable
-def test_eq_opcode(opcode: Variable, cst: Variable) -> Variable:
-    assert(opcode.bus_size == const.OPCODE_SIZE)
-    assert(cst.bus_size == const.OPCODE_SIZE)
-    res = (~(opcode[0]^cst[0]))
-    for i in range(1, opcode.bus_size):
-        res = res & (~(opcode[i]^cst[i]))
+def test_eq(a: Variable, b: Variable) -> Variable:
+    assert(a.bus_size == b.bus_size)
+    assert(a.bus_size >= 1)
+    res = (~(a[0]^b[0]))
+    for i in range(1, a.bus_size):
+        res = res & (~(a[i]^b[i]))
     return res
 
 

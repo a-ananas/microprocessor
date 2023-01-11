@@ -43,7 +43,7 @@ def get_isI(o: Variable):
     c = o[4] & ~(o[3] | o[2] | o[1] | o[0])
     d = o[4] & o[2] & o[1] & ~o[3] & ~o[0]
     #le code 11111 est de type I aiussi
-    b = And5(o[0],o[1],o[2],o[3],o[4])
+    b = utils.And5(o[0],o[1],o[2],o[3],o[4])
     return a | b | c | d
 
 def get_isR(o: Variable):

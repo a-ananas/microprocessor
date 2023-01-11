@@ -20,6 +20,6 @@ C32B_1 = lambda : Constant("1"+31*"0")
 
 REG_SIZE = 32
 REG_ADDR_SIZE = 5
-REG_IDS = ["x"+i for i in range(REG_SIZE)]
+REG_IDS = [Variable("x"+str(i), REG_SIZE) for i in range(REG_SIZE)]
 
 OPCODE_SIZE = 5

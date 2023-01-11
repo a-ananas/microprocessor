@@ -40,19 +40,19 @@ def get_instr_is_jmp(opcode: Variable) -> Variable:
     # blti -> 10110
     # bge  -> 10111
     # if opcode = one of the above then 1 else 0
-    instr_is_jmp = utils.test_eq_opcode(opcode, Constant("11011"))
+    instr_is_jmp = utils.test_eq(opcode, Constant("11011"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("00111"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("00111"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("11001"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("11001"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("00101"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("00101"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("10101"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("10101"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("01101"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("01101"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq_opcode(opcode, Constant("11101"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("11101"))
     assert(instr_is_jmp.bus_size == 1)
     return instr_is_jmp
 
