@@ -1,6 +1,6 @@
 from lib_carotte import *
 
-from alu import const
+from global_utils import const
 import rdi
 
 def get_wdata(opcode: Variable, value_from_alu: Variable, value_from_ram: Variable) -> Variable:

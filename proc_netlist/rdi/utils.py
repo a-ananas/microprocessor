@@ -1,7 +1,7 @@
 from lib_carotte import *
 
 from alu import arith
-from alu import const
+from global_utils import const
 from alu import logic
 from alu import comp
 

@@ -1,6 +1,6 @@
 from lib_carotte import *
 
-from alu.const import reg_size, opcode_size
+from global_utils.const import reg_size, opcode_size
 
 from . import utils
 
