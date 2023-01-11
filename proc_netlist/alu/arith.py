@@ -1,5 +1,5 @@
 from lib_carotte import *
-from . import const
+from global_utils import const
 from . import logic
 from . import utils
 

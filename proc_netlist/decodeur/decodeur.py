@@ -3,7 +3,7 @@
 #et une sortie avec absolument tout, a voir
 from lib_carotte import *
 
-import utils
+from global_utils import utils
 
 
 def decodeur_dinstructions(instr: Variable):

@@ -1,7 +1,9 @@
 from lib_carotte import *
 
-bs = 32
-bsize = 5
+from global_utils import const
+
+bs = const.reg_size
+
 
 def sllk(a,k): 
     assert(a.bus_size == bs)
@@ -10,9 +12,8 @@ def sllk(a,k):
     return b
 
 
-def sll(a,b):
-
-    assert(b.bus_size == bsize)
+def slln(a,b):
+    assert(b.bus_size == a.bus_size)
     s1 = sllk(a,1)
     a1 = Mux(b[0],a,s1)
     s2 = sllk(a1,2)
@@ -25,14 +26,16 @@ def sll(a,b):
     a5 = Mux(b[4],a4,s5)
     return a5
 
+
 def srlk(a,k):
     assert(a.bus_size == bs)
     s = k * "0"
     b = Concat(a[k:bs],Constant(s))
     return b
 
-def srl(a,b):
-    assert(b.bus_size == bsize)
+
+def srln(a,b):
+    assert(b.bus_size == a.bus_size)
     s1 = srlk(a,1)
     a1 = Mux(b[0],a,s1)
     s2 = srlk(a1,2)
@@ -45,18 +48,18 @@ def srl(a,b):
     a5 = Mux(b[4],a4,s5)
     return a5
 
+
 def srak(a,k):
-
     assert(a.bus_size == bs)
-
     s0 = Constant(k * "0")
     s1 = Constant(k * "1")
     s = Mux(a[31],s0,s1)
     b = Concat(a[k:bs],s)
     return b
 
-def sra(a,b):
-    assert(b.bus_size == bsize)
+
+def sran(a,b):
+    assert(b.bus_size == a.bus_size)
     s1 = srak(a,1)
     a1 = Mux(b[0],a,s1)
     s2 = srak(a1,2)

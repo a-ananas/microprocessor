@@ -1,8 +1,8 @@
 from lib_carotte import *
+from global_utils import const
 
 from . import arith
 from . import comp
-from . import const
 from . import logic
 from . import utils
 from . import shift
