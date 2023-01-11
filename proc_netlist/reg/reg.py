@@ -6,8 +6,8 @@ def reg(opcode: Variable, imm: Variable, rs1: Variable, rs2: Variable, rd: Varia
     # get real wdata
     wdata = utils.get_wdata(opcode, value_from_alu, value_from_ram)
 
-    # get real i1
-
+    
     # get real i2
+    real_i2 = utils.get_i2(opcode, imm, i2_from_reg)
     
     return

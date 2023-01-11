@@ -4,11 +4,12 @@
 from lib_carotte import *
 
 from global_utils import utils
+from global_utils import const
 
 
 def decodeur_dinstructions(instr: Variable):
     #verification que c'est bien le format d'une instruction
-    assert instr.bus_size == 32
+    assert instr.bus_size == const.REG_SIZE
     opcode = instr[0:5]
     isR = get_isR(opcode)
     isI = get_isI(opcode)

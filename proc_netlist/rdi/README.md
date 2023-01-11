@@ -20,8 +20,7 @@ Then, if the alu returned value is 1, we set another selector (jmp_cond_fullfile
 
 We then get two possible addresses for the next instruction to read: 
 - add1 =  last address + 4 (if we do not want to jump)
-- add2 = immediate extended to 32 bits, immediate comming from the branching instruction which represents the 
-label where we want to jump
+- add2 = immediate extended to 32 bits + old address, immediate comming from the branching instruction which represents the label where we want to jump (i.e. the offset from the current address to the one we want to jump to)
 
 Afterward, we use two multiplexor:
 
