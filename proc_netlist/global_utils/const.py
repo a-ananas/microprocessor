@@ -23,3 +23,5 @@ REG_ADDR_SIZE = 5
 REG_IDS = [Variable("x"+str(i), REG_SIZE) for i in range(REG_SIZE)]
 
 OPCODE_SIZE = 5
+
+MEMORY_ADDR_SIZE = 16

@@ -34,6 +34,20 @@ def microproc() -> None:
     
     ram_out: Variable = ram.ram(alu_out, wenable, i2)
 
-    rdi_out: Variable = rdi.next_instr(Reg(Defer(const.REG_SIZE, lambda: rdi_out)), opcode, alu_out, imm) # loop ?
+    rdi_out: Variable = rdi.next_instr(Reg(Defer(const.REG_SIZE, lambda: rdi_out)), opcode, alu_out, imm)
+
+    # watching one step
+    rom_out.set_as_output("rom")
+    opcode.set_as_output("opcode")
+    imm.set_as_output("imm")
+    rs1.set_as_output("rs1")
+    rs2.set_as_output("rs2")
+    rd.set_as_output("rd")
+    wenable.set_as_output("wenable")
+    i1.set_as_output("i1")
+    i2.set_as_output("i2")
+    alu_out.set_as_output("alu")
+    ram_out.set_as_output("ram")
+    rdi_out.set_as_output("rdi")
 
     return 

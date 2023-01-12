@@ -5,6 +5,6 @@ def rom(next_instr: Variable) -> Variable:
     # test input sizes
     assert(next_instr.bus_size == const.REG_SIZE)
 
-    r = ROM(const.REG_SIZE, const.REG_SIZE, next_instr)
+    r = ROM(const.MEMORY_ADDR_SIZE, const.REG_SIZE, next_instr[0:const.MEMORY_ADDR_SIZE])
     
     return r

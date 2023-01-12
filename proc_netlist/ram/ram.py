@@ -7,6 +7,11 @@ def ram(raddr_or_wdata: Variable, wenable: Variable, waddr: Variable) -> Variabl
     assert(waddr.bus_size == const.REG_SIZE)
     assert(wenable.bus_size == 1)
 
-    r = RAM(const.REG_SIZE, const.REG_SIZE, raddr_or_wdata, wenable, waddr, raddr_or_wdata)
+    r = RAM(const.MEMORY_ADDR_SIZE, 
+            const.REG_SIZE, 
+            raddr_or_wdata[0:const.MEMORY_ADDR_SIZE], 
+            wenable, 
+            waddr[0:const.MEMORY_ADDR_SIZE], 
+            raddr_or_wdata)
 
     return r

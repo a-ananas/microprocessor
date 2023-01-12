@@ -19,13 +19,13 @@ exception LogicalError of string
 exception SystemError of string
 
 (* the size of the adresses in the ROM *)
-let romAddrSize = 2;;
+let romAddrSize = 16;;
 (* the size of a word in the ROM *)
-let romWordSize = 4;;
+let romWordSize = 32;;
 (* the size of the adresses in the RAM *)
-let ramAddrSize = 2;;
+let ramAddrSize = 16;;
 (* the size of a word in the RAM *)
-let ramWordSize = 4;;
+let ramWordSize = 32;;
 
 (* return the Value of an argument *)
 let calculArg arg env = 
