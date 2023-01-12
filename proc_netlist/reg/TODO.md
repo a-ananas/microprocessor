@@ -6,3 +6,4 @@
 - [x] list of register variables using their names
 
 - [x] rd = x0 -> too fast ???
+- [ ] add register schema in README
