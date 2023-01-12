@@ -15,7 +15,7 @@ def get_address(old_rdi: Variable, instr_is_jmp: Variable, jmp_cond_fullfiled: V
     assert(jmp_cond_fullfiled.bus_size == 1)
 
     # standard address for the next instruction
-    extended_4 = Constant("001"+29*"0")
+    extended_4 = Constant("001"+(const.REG_SIZE-3)*"0")
     assert(extended_4.bus_size == const.REG_SIZE)
     std_next_rdi = arith.addn(extended_4, old_rdi, const.C1B_0())[0]
     assert(std_next_rdi.bus_size == const.REG_SIZE)
