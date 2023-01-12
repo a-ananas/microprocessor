@@ -23,3 +23,7 @@ def test_reg() -> None:
 
     i1.set_as_output("i1")
     i2.set_as_output("i2")
+    
+    # for r in const.REG_IDS:
+    #     name = r.get_full_name().split(':',1)[0]
+    #     r.set_as_output(name)

@@ -5,4 +5,4 @@
 - [x] store value in register
 - [x] list of register variables using their names
 
-- [ ] rd = x0 -> one step delayed, rd = x?? -> two steps delay, is it normal ?
+- [x] rd = x0 -> too fast ???
