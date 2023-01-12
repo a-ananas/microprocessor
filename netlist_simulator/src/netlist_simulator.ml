@@ -34,9 +34,9 @@ let calculArg arg env =
     | Aconst value -> value
 ;;
 
-(* convert a Value into an adress *)
+(* convert a Value into an address *)
 let valueToAdress v addrSize =
-  (* convert a bit array into an adress *)
+  (* convert a bit array into an address *)
   let rec bitArrayToAddr arr index res max =
     match index with
     | i when i>=max -> res
@@ -52,14 +52,14 @@ let valueToAdress v addrSize =
   in
   match v with
   | VBit b -> if (addrSize<>1) 
-                then raise (LogicalError "Invalid value as an adress!\n") 
+                then raise (LogicalError "Invalid value as an address!\n") 
                 else if b then "1" else "0"
   | VBitArray arr -> let len = Array.length arr in
-                if (len<>addrSize) then raise (LogicalError "Invalid value as an adress!\n")
+                if (len<>addrSize) then raise (LogicalError "Invalid value as an address!\n")
                 else (bitArrayToAddr arr 0 "" (Array.length arr))
 ;;  
 
-(* get an adress from an arg *)
+(* get an address from an arg *)
 let argToAdress arg addrSize env =
   let value = calculArg arg env in (valueToAdress value addrSize)
 ;;
@@ -217,7 +217,7 @@ let readValueFromMemory addrSize wordSize readAddr glblEnv memoryEnv memoryAddrS
   (* get the word in the ROM *)
   if(wordSize <= 0 || addrSize <= 0) then raise (LogicalError "Word's and addresse's sizes must be greater than 0!\n")
   else
-    (* get the adress *)
+    (* get the address *)
     let raddr = (argToAdress readAddr memoryAddrSize glblEnv) in
       (Env.find raddr memoryEnv)
 ;;
@@ -431,7 +431,7 @@ let initMemEmpty addrSize =
   let maxAddr = (pow 2 addrSize) in
   (* fprintf fStdout "maxAddr: %d\n@." maxAddr; *)
   let rec forAllAdresses curAddr env = 
-    (* add the current adress to the env *)
+    (* add the current address to the env *)
     match curAddr with
     | addr when addr>=maxAddr -> env
     | _ -> 

@@ -67,13 +67,13 @@ val calculArg :
 
 
 
-(** convert a Value into an adress *)
+(** convert a Value into an address *)
 
 val valueToAdress : Netlist_ast.value -> int -> string
 
 
 
-(** get an adress from an arg *)
+(** get an address from an arg *)
 
 val argToAdress :
   Netlist_ast.arg -> int -> Netlist_ast.value Netlist_ast.Env.t -> string
