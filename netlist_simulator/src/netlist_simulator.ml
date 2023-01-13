@@ -7,6 +7,9 @@ let print_only = ref false
 (* the option to specify the number of cycle on wich run the program *)
 let number_steps = ref (-1)
 
+(* the option to specify a file to initiate the rom *)
+let rom_init_file = ref ""
+
 (* the standard output for format printer *)
 let fStdout = (formatter_of_out_channel stdout)
 
@@ -410,21 +413,20 @@ let rec pow a = function
 
 
 (* cast an integer into a binary string *)
-let intToBin x len =
+let intToBinString x len =
   let rec d2b y res = match y with 
     | 0 -> res
     | _ -> let tmp = if ((y mod 2) = 1) then "1" else "0" in 
-      (d2b (y/2) (tmp^res))
+      (d2b (y/2) (res^tmp))
   in
   let bin = (d2b x "") in
   let deltaSize = len - (String.length bin) in
-  let deltaStr = String.make deltaSize '0' in
-    deltaStr^bin
+  let deltaStr = String.make deltaSize '0' in bin^deltaStr
 ;;
 
 
 (* init an empty memory *)
-let initMemEmpty addrSize = 
+let initMemEmpty addrSize wordSize = 
   (* empty map *)
   let env = Env.empty in
   (* create all possible adresses *)
@@ -436,20 +438,86 @@ let initMemEmpty addrSize =
     | addr when addr>=maxAddr -> env
     | _ -> 
       (* initiate to false buses of size addrSize *)
-      let env = (Env.add (intToBin curAddr addrSize) (VBitArray(Array.make ramWordSize false)) env)
+      let env = (Env.add (intToBinString curAddr addrSize) (VBitArray(Array.make wordSize false)) env)
         in (forAllAdresses (curAddr+1) env)
     in (forAllAdresses 0 env)
 ;;
 
 (* init the RAM *)
-let initRAM addrSize =
+let initRAM addrSize wordSize =
   (* RAM is initiate empy *)
-  (initMemEmpty addrSize)
+  (initMemEmpty addrSize wordSize)
 ;;
 
-(* init the ROM (empty for the moment) *)
-let initROM addrSize =
-  (initMemEmpty addrSize)
+(* extends a string to a given size by adding zeros at the end *)
+let extendString s len =
+  let delta = len - String.length s in
+    if delta < 0 then s
+    else s^(String.make delta '0')
+;;
+
+(* read a file and put its lines inside a list *)
+let readFile file_name =
+  let ic = open_in file_name in
+  let try_read () =
+    try Some (input_line ic) with End_of_file -> None in
+  let rec loop acc = match try_read () with
+    | Some s -> 
+      (* cut the 32 bits in bytes *)
+      let p1,p2,p3,p4 =
+        try
+          (extendString (String.sub s 0  8) 32), 
+          (extendString (String.sub s 8  8) 32), 
+          (extendString (String.sub s 16 8) 32), 
+          (extendString (String.sub s 24 8) 32)
+        with _ -> raise (LogicalError "Input for rom initialization contains an invalid line\n")
+      in 
+        loop (acc@[p1]@[p2]@[p3]@[p4])
+    | None -> close_in ic; List.rev acc in
+  loop []
+;;
+
+
+(* add a list of k element inside the first k addresses of an environment *)
+let addElemBegEnv l env addrSize =
+  let len = List.length l in
+  let rec forLoop curAddr curList env = 
+    (* map the current value to the current address in the env *)
+    match curAddr, curList with
+    | _, [] -> env
+    | addr, _ when addr>len -> env
+    | _, curValue::t -> 
+      let addr = (intToBinString curAddr addrSize) in
+      let value = (VBitArray curValue) in
+      let env = (Env.add addr value env)
+        in (forLoop (curAddr+1) t env)
+    in (forLoop 0 l env)
+;;
+
+(* initiate the ROM from a given file *)
+let initROMFromFile file_name env addrSize wordSize =
+  let lst = readFile file_name in
+  let lstConverted = List.map (fun l -> stringToArray l wordSize) lst in 
+    (addElemBegEnv lstConverted env addrSize)
+;;
+
+(* init the ROM *)
+let initROM addrSize wordSize =
+  let rom = (initMemEmpty addrSize wordSize) in
+    let file_name = !rom_init_file in
+    if String.equal file_name ""
+      then rom
+      else try (initROMFromFile file_name rom addrSize wordSize) 
+    with 
+      | Invalid_argument(s) -> 
+          let msg = "Failed to initiate the ROM from the file "^file_name^":\n\t"^s in
+            catchException (SystemError msg)
+      | LogicalError(s) -> 
+          let msg = "Failed to initiate the ROM from the file "^file_name^":\n\t"^s in
+            catchException (SystemError msg)
+      | _ ->
+          let msg = "Failed to initiate the ROM from the file "^file_name^":\n\tUnknown reason" in
+            catchException (SystemError msg)
 ;;
 
 (* simulate a netlist *)
@@ -458,9 +526,9 @@ let simulator program number_steps =
   (* creating environments *)
   let env = (initEnv program) in
   (* empty ROM for the moment *)
-  let envROM = (initROM romAddrSize) in
+  let envROM = (initROM romAddrSize romWordSize) in
   (* init the RAM *)
-  let envRAM = (initRAM ramAddrSize) in
+  let envRAM = (initRAM ramAddrSize ramWordSize) in
   (* fprintf fStdout "nbsteps = %d\n@." number_steps; *)
   if (number_steps < (-1)) then catchException (LogicalError "Number of steps can't be a negative value!\n")
   else
@@ -521,7 +589,8 @@ let main () =
   Arg.parse
     [
       "-n", Arg.Set_int number_steps, "Number of steps to simulate";
-      "--print", Arg.Set print_only, "Only prints the program"
+      "--print", Arg.Set print_only, "Only prints the program";
+      "-rom", Arg.Set_string rom_init_file, "The file used to initiate the ROM"
     ]
     compile
     ""

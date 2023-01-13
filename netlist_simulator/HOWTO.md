@@ -48,3 +48,9 @@ or show the running netlist with the ```--print``` option.
 # do not run the simulator but just print the running netlist
 ./bin/netlist_simulator.byte --print test/fulladder.net
 ```
+
+To initialize the ROM given an input files you have to add another otptional argument ```-rom file```
+```sh
+# initialize the rom inside the simulator using the given file and run the simulator on the test file
+./bin/netlist_simulator.byte -rom init_rom.i test/fulladder.net
+```

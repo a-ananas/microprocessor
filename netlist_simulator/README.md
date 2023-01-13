@@ -36,8 +36,8 @@ Behavior for memories:
 
 <ul>
 
-<li>We've chosen to give a fixed <code>address size</code> of 2 bits for both the RAM's and the ROM's addresses.</li>
-<li>We've chosen to give a fixed <code>word size</code> of 4 bits for both the RAM's and the ROM's values.</li>
+<li>We've chosen to give a fixed <code>address size</code> of 16 bits for both the RAM's and the ROM's addresses.</li>
+<li>We've chosen to give a fixed <code>word size</code> of 32 bits for both the RAM's and the ROM's values.</li>
 
 <li>Like the two others environments, memories will be repesent by tables mapping addresses (represented as strings) to their correesponding value.</li>
 
