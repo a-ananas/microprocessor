@@ -10,15 +10,15 @@ Otherwise, we have two situations:
 
 - Inconditional jump (jal)
 
--> The [ALU](../alu/README.md) return 1 (extended to 32 bits)
+-> The [ALU](../alu) return 1 (extended to 32 bits)
 
 - Conditional jump (beq, bne, ...)
 
--> The [ALU](../alu/README.md) return 1 if the condition is valid, 0 if not
+-> The [ALU](../alu) return 1 if the condition is valid, 0 if not
 
 
 For both cases we start by putting the selector instr_is_jmp to 1.
-Then, if the [ALU](../alu/README.md) returned value is 1, we set another selector (jmp_cond_fullfiled) to 1.
+Then, if the [ALU](../alu) returned value is 1, we set another selector (jmp_cond_fullfiled) to 1.
 
 We then get two possible addresses for the next instruction to read: 
 - add1 =  last address + 4 (if we do not want to jump)
