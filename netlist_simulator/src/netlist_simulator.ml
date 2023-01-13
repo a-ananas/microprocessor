@@ -472,7 +472,11 @@ let readFile file_name =
           (extendString (String.sub s 24 8) 32)
         with _ -> raise (LogicalError "Input for rom initialization contains an invalid line\n")
       in 
-        loop (acc@[p1]@[p2]@[p3]@[p4])
+        (* print_string ("p1: "^p1^"\n");
+        print_string ("p2: "^p2^"\n");
+        print_string ("p3: "^p3^"\n");
+        print_string ("p4: "^p4^"\n\n"); *)
+        loop (p4::p3::p2::p1::acc)
     | None -> close_in ic; List.rev acc in
   loop []
 ;;
@@ -489,8 +493,10 @@ let addElemBegEnv l env addrSize =
     | _, curValue::t -> 
       let addr = (intToBinString curAddr addrSize) in
       let value = (VBitArray curValue) in
-      let env = (Env.add addr value env)
-        in (forLoop (curAddr+1) t env)
+        (* fprintf fStdout "addr: %s\nvalue: %a\n\n" addr Netlist_printer.print_value value; *)
+      let env = (Env.add addr value env) in
+        (* fprintf fStdout "elem: %a\n\n" Netlist_printer.print_value (Env.find addr env); *)
+        (forLoop (curAddr+1) t env)
     in (forLoop 0 l env)
 ;;
 
