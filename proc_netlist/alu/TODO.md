@@ -10,4 +10,4 @@
 # things to add
 
 - [ ] add alu schema in README
-- [ ] rewrite README
+- [x] rewrite README

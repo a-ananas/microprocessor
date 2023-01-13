@@ -14,11 +14,11 @@
 
 - [x] implement the ALU (as a huge block using carotte)
 
-- [ ] reproduce the proc made in class
+- [x] reproduce the proc made in class
 
-- ... probably few steps missing here
+- [x] design the full microproc
 
-- [ ] design the full microproc
+- [ ] implement instruction decoder
 
 
 ## SIMULATOR

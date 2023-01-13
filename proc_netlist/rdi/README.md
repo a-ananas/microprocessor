@@ -1,5 +1,7 @@
 # RDI
 
+## Description
+
 Module to get the address in rom of the next instruction to read.
 
 If the current instruction in not a branchment, we set our first selector (instr_is_jmp) to 0.
@@ -8,15 +10,15 @@ Otherwise, we have two situations:
 
 - Inconditional jump (jal)
 
--> The alu return 1 (extended to 32 bits)
+-> The [ALU](../alu/README.md) return 1 (extended to 32 bits)
 
 - Conditional jump (beq, bne, ...)
 
--> The alu return 1 if the condition is valid, 0 if not
+-> The [ALU](../alu/README.md) return 1 if the condition is valid, 0 if not
 
 
 For both cases we start by putting the selector instr_is_jmp to 1.
-Then, if the alu returned value is 1, we set another selector (jmp_cond_fullfiled) to 1.
+Then, if the [ALU](../alu/README.md) returned value is 1, we set another selector (jmp_cond_fullfiled) to 1.
 
 We then get two possible addresses for the next instruction to read: 
 - add1 =  last address + 4 (if we do not want to jump)
@@ -29,3 +31,7 @@ add3 = jmp_cond_fullfiled as the selector, add1 as the first value, add2 as the 
 add4 = instr_is_jmp as the selector, add1 as the first value, add3 as the second value
 
 finally we return add4
+
+## Schematic
+
+<!-- TODO -->

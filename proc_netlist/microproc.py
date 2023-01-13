@@ -15,8 +15,8 @@ def microproc() -> None:
     
     rom_out: Variable = rom.rom(Reg(Defer(const.REG_SIZE, lambda: rdi_out)))
     
-    # values from the instruction decodor
-    # di: Variable = decodeur.decodeur_dinstructions(rom_out)
+    # values from the instruction decoder
+    # di: Variable = decoder.decoder_dinstructions(rom_out)
     # temporary
     di: Variable = [Constant("01000"), const.C32B_0(), Constant("00000"), Constant("10000"), Constant("10000"), const.C1B_1()]
     opcode: Variable = di[0]
