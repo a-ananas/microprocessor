@@ -49,8 +49,8 @@ let valueToAdress v addrSize =
         else (bitArrayToAddr arr 1 "0" max)
     | i when i>=0 -> 
       if arr.(i) 
-        then (bitArrayToAddr arr (i+1) ("1"^res) max)
-        else (bitArrayToAddr arr (i+1) ("0"^res) max)
+        then (bitArrayToAddr arr (i+1) (res^"1") max)
+        else (bitArrayToAddr arr (i+1) (res^"0") max)
     | _ -> raise (LogicalError "Invalid length for a VBitArray!\n")
   in
   match v with
