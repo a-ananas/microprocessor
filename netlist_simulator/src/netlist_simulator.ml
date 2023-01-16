@@ -11,7 +11,7 @@ let number_steps = ref (-1)
 let rom_init_file = ref ""
 
 (* the current unix time *)
-let unix_time = ref (Unix.time())
+let unix_time = ref 0.
 
 (* the standard output for format printer *)
 let fStdout = (formatter_of_out_channel stdout)
@@ -34,15 +34,8 @@ let ramAddrSize = 16;;
 let ramWordSize = 32;;
 
 (* ram special addresses *)
-(* 
-let ramAddrSec  = "1001111111111111"
-let ramAddrMin  = "0101111111111111"
-let ramAddrHour = "1101111111111111"
-let ramAddrDay  = "0011111111111111"
-let ramAddrMon  = "1011111111111111"
-let ramAddrYear = "0111111111111111"
-let ramAddrUpdt = "1111111111111111" 
-*)
+let ramAddrCounter = "0000000000000000"
+let ramAddrUpdt    = "1000000000000000" 
 
 
 (* return the Value of an argument *)
@@ -458,10 +451,45 @@ let initMemEmpty addrSize wordSize =
     in (forAllAddresses 0 env)
 ;;
 
+(* transform an int in base 10 into a VBitArray *)
+let intToVBitArray vint length =
+  let nth_bit x n = x land (1 lsl n) <> 0 in
+  let bitarray length x = Array.init length (nth_bit x) in
+    (VBitArray (bitarray length vint))
+;;
+
+(* transform a float into a VBitArray *)
+let floatToVBitArray vfloat length =
+  let vint = Stdlib.int_of_float vfloat in
+    (intToVBitArray vint length)
+;;
+
+
+(* update unix time in ram *)
+let updateUnixTime ram =
+  let cur_time = Unix.time() in
+  if (cur_time -. !unix_time >= 1.)
+    then 
+      begin
+        unix_time := cur_time;
+        let ram = (Env.add ramAddrCounter (floatToVBitArray !unix_time ramWordSize) ram) in
+          let new_val = (Array.make ramWordSize false) in
+            begin
+              (Array.set new_val 0 true);
+              (Env.add ramAddrUpdt (VBitArray(new_val)) ram)
+            end
+      end
+    else ram
+;;
+
+
 (* init the RAM *)
 let initRAM addrSize wordSize =
   (* RAM is initiate empy *)
-  (initMemEmpty addrSize wordSize)
+  let ram = (initMemEmpty addrSize wordSize) in
+    (* adding unix time in the special address *)
+    unix_time := Unix.time();
+    (Env.add ramAddrCounter (floatToVBitArray !unix_time wordSize) ram)
 ;;
 
 (* extends a string to a given size by adding zeros at the end *)
@@ -573,8 +601,8 @@ let simulator program number_steps =
       else
         begin
           fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1));
-          (* temporary *)
-          (* print_time fStdout; *)
+          (* update time *)
+          let envRAM = updateUnixTime envRAM in
           (* ask for inputs *)
           let env = askForInputs program.p_inputs env in
             (* for eq in equations *)
