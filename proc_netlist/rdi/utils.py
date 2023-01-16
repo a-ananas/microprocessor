@@ -32,17 +32,17 @@ def get_instr_is_jmp(opcode: Variable) -> Variable:
     # test input size
     assert(opcode.bus_size == const.OPCODE_SIZE)
 
-    # jal  -> 11011
-    # jalr -> 11100 
+    # jal  -> 11010
+    # jalr -> 11011 
     # beq  -> 10011
     # bne  -> 10100
     # blt  -> 10101
     # blti -> 10110
     # bge  -> 10111
-    # if opcode = one of the above then 1 else 0
-    instr_is_jmp = utils.test_eq(opcode, Constant("11011"))
+    # if opcode = one of the above (reversed) then 1 else 0
+    instr_is_jmp = utils.test_eq(opcode, Constant("01011"))
     assert(instr_is_jmp.bus_size == 1)
-    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("00111"))
+    instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("11011"))
     assert(instr_is_jmp.bus_size == 1)
     instr_is_jmp = instr_is_jmp | utils.test_eq(opcode, Constant("11001"))
     assert(instr_is_jmp.bus_size == 1)

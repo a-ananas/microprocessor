@@ -1,7 +1,7 @@
 from lib_carotte import *
 from global_utils import const
 
-# from decodeur import decodeur
+from decoder import decoder
 from reg import reg
 from alu import alu
 from ram import ram
@@ -16,9 +16,7 @@ def microproc() -> None:
     rom_out: Variable = rom.rom(Reg(Defer(const.REG_SIZE, lambda: rdi_out)))
     
     # values from the instruction decoder
-    # di: Variable = decoder.decoder_dinstructions(rom_out)
-    # temporary
-    di: Variable = [Constant("01000"), const.C32B_0(), Constant("00000"), Constant("10000"), Constant("10000"), const.C1B_1(), const.C1B_1()]
+    di: Variable = decoder.decoder(rom_out)
     opcode: Variable = di[0]
     imm: Variable = di[1]
     rs1: Variable = di[2]

@@ -10,6 +10,9 @@ let number_steps = ref (-1)
 (* the option to specify a file to initiate the rom *)
 let rom_init_file = ref ""
 
+(* the current unix time *)
+let unix_time = ref (Unix.time())
+
 (* the standard output for format printer *)
 let fStdout = (formatter_of_out_channel stdout)
 
@@ -21,14 +24,26 @@ exception LogicalError of string
 (* an exception thrown when a an impossible situation happens *)
 exception SystemError of string
 
-(* the size of the adresses in the ROM *)
+(* the size of the addresses in the ROM *)
 let romAddrSize = 16;;
 (* the size of a word in the ROM *)
 let romWordSize = 32;;
-(* the size of the adresses in the RAM *)
+(* the size of the addresses in the RAM *)
 let ramAddrSize = 16;;
 (* the size of a word in the RAM *)
 let ramWordSize = 32;;
+
+(* ram special addresses *)
+(* 
+let ramAddrSec  = "1001111111111111"
+let ramAddrMin  = "0101111111111111"
+let ramAddrHour = "1101111111111111"
+let ramAddrDay  = "0011111111111111"
+let ramAddrMon  = "1011111111111111"
+let ramAddrYear = "0111111111111111"
+let ramAddrUpdt = "1111111111111111" 
+*)
+
 
 (* return the Value of an argument *)
 let calculArg arg env = 
@@ -38,7 +53,7 @@ let calculArg arg env =
 ;;
 
 (* convert a Value into an address *)
-let valueToAdress v addrSize =
+let valueToAddress v addrSize =
   (* convert a bit array into an address *)
   let rec bitArrayToAddr arr index res max =
     match index with
@@ -63,8 +78,8 @@ let valueToAdress v addrSize =
 ;;  
 
 (* get an address from an arg *)
-let argToAdress arg addrSize env =
-  let value = calculArg arg env in (valueToAdress value addrSize)
+let argToAddress arg addrSize env =
+  let value = calculArg arg env in (valueToAddress value addrSize)
 ;;
 
 
@@ -221,7 +236,7 @@ let readValueFromMemory addrSize wordSize readAddr glblEnv memoryEnv memoryAddrS
   if(wordSize <= 0 || addrSize <= 0) then raise (LogicalError "Word's and addresse's sizes must be greater than 0!\n")
   else
     (* get the address *)
-    let raddr = (argToAdress readAddr memoryAddrSize glblEnv) in
+    let raddr = (argToAddress readAddr memoryAddrSize glblEnv) in
       (Env.find raddr memoryEnv)
 ;;
 
@@ -247,7 +262,7 @@ let calculRam addrSize wordSize readAddr writeEnable writeAddr data env envRAM p
       then (readValue, envRAM)
       (* writting *)
       else
-        let waddr = (argToAdress writeAddr ramAddrSize env) in
+        let waddr = (argToAddress writeAddr ramAddrSize env) in
         (* check data size *)
         match (calculArg data env) with
         | VBit b -> let newEnvRAM = (Env.add waddr (VBit b) envRAM) in (readValue, newEnvRAM)
@@ -429,18 +444,18 @@ let intToBinString x len =
 let initMemEmpty addrSize wordSize = 
   (* empty map *)
   let env = Env.empty in
-  (* create all possible adresses *)
+  (* create all possible addresses *)
   let maxAddr = (pow 2 addrSize) in
   (* fprintf fStdout "maxAddr: %d\n@." maxAddr; *)
-  let rec forAllAdresses curAddr env = 
+  let rec forAllAddresses curAddr env = 
     (* add the current address to the env *)
     match curAddr with
     | addr when addr>=maxAddr -> env
     | _ -> 
       (* initiate to false buses of size addrSize *)
       let env = (Env.add (intToBinString curAddr addrSize) (VBitArray(Array.make wordSize false)) env)
-        in (forAllAdresses (curAddr+1) env)
-    in (forAllAdresses 0 env)
+        in (forAllAddresses (curAddr+1) env)
+    in (forAllAddresses 0 env)
 ;;
 
 (* init the RAM *)
@@ -526,6 +541,15 @@ let initROM addrSize wordSize =
             catchException (SystemError msg)
 ;;
 
+
+(* print the current time *)
+let print_time out =
+  fprintf out "cur_unix_time: %f\n" !unix_time;
+  let tm = Unix.gmtime !unix_time in
+    fprintf out "%d/%d/%d, %d:%d:%d\n\n" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec
+;;
+
+
 (* simulate a netlist *)
 let simulator program number_steps = 
   (* Netlist.print_program stdout program; *)
@@ -549,6 +573,8 @@ let simulator program number_steps =
       else
         begin
           fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1));
+          (* temporary *)
+          (* print_time fStdout; *)
           (* ask for inputs *)
           let env = askForInputs program.p_inputs env in
             (* for eq in equations *)
