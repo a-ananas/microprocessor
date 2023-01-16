@@ -15,7 +15,7 @@ addi x2 x2 240
 # Démarre l'algo : 
 
 #marche pas :(
-blti x0 ADD3 x0 x0 
+blti x0 x0 x0 ADD3 
 
 ADD3:
 addi x0 x0 3
