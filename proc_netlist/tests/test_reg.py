@@ -4,6 +4,8 @@ from alu import alu
 from global_utils import const
 
 def test_reg() -> None:
+    allow_ribbon_logic_operations(True)
+
     rs1 = Constant("00000") # rs1 = reg x0
     rs2 = Constant("10000") # rs2 = reg x1
     # rd  = Constant("00000") # rd  = reg x0

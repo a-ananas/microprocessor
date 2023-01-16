@@ -25,7 +25,11 @@ def microproc() -> None:
     wenableReg: Variable = di[5]
     wenableRam: Variable = di[6]
 
-    reg_out: Variable = reg.reg(opcode, imm, rs1, rs2, rd, wenableReg, Reg(Defer(const.REG_SIZE, lambda: alu_out)), Reg(Defer(const.REG_SIZE, lambda: ram_out)))
+    reg_out: Variable = reg.reg(opcode, imm, rs1, rs2, 
+                                Reg(rd),
+                                Reg(wenableReg), 
+                                Reg(Defer(const.REG_SIZE, lambda: alu_out)), 
+                                Reg(Defer(const.REG_SIZE, lambda: ram_out)))
     i1: Variable = reg_out[0]
     i2: Variable = reg_out[1]
 
