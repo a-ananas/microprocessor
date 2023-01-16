@@ -1,10 +1,14 @@
 # Assembler RISC-V 
 ## Syntax :
 * R : `instr rd rs1 rs2`
+* R : `instr rd lab rs1 rs2`
 * I : `instr rd rs imm`
+* I : `instr rd rs lab`
 * U : `instr rd imm`
+* U : `instr rd lab`
     > Comments starting by `#`
     > Labels are strings of chars and digits followed by a `:`
+    > R types with labels are the conditionnal branching, their syntax is a bit different because of conflicts risen in the parser : TO FIX.
 
 So the syntax is first the register output, then the two registers or register immediate or immediate/label.
 

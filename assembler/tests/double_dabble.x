@@ -13,10 +13,9 @@ addi x1 x1 15
 addi x2 x2 240
 
 # Démarre l'algo : 
-sll
 
 #marche pas :(
-blti x0 x0 x0
+blti x0 ADD3 x0 x0 
 
 ADD3:
 addi x0 x0 3
