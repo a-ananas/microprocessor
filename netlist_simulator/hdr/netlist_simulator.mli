@@ -36,7 +36,7 @@ exception SystemError of string
 
 
 
-(** the size of the adresses in the ROM *)
+(** the size of the addresses in the ROM *)
 
 val romAddrSize : int
 
@@ -48,7 +48,7 @@ val romWordSize : int
 
 
 
-(** the size of the adresses in the RAM *)
+(** the size of the addresses in the RAM *)
 
 val ramAddrSize : int
 
@@ -67,15 +67,15 @@ val calculArg :
 
 
 
-(** convert a Value into an adress *)
+(** convert a Value into an address *)
 
-val valueToAdress : Netlist_ast.value -> int -> string
+val valueToAddress : Netlist_ast.value -> int -> string
 
 
 
-(** get an adress from an arg *)
+(** get an address from an arg *)
 
-val argToAdress :
+val argToAddress :
   Netlist_ast.arg -> int -> Netlist_ast.value Netlist_ast.Env.t -> string
 
 

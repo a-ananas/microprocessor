@@ -1,22 +1,32 @@
 from lib_carotte import *
 
-c1b_0 = lambda : Constant("0")
-c1b_1 = lambda : Constant("1")
+C1B_0 = lambda : Constant("0")
+C1B_1 = lambda : Constant("1")
 
-c2b_0 = lambda : Constant("00")
-c2b_1 = lambda : Constant("10")
+C2B_0 = lambda : Constant("00")
+C2B_1 = lambda : Constant("10")
 
-c4b_0 = lambda : Constant("0000")
-c4b_1 = lambda : Constant("1000")
+C4B_0 = lambda : Constant("0000")
+C4B_1 = lambda : Constant("1000")
 
-c8b_0 = lambda : Constant(8*"0")
-c8b_1 = lambda : Constant("1"+7*"0")
+C8B_0 = lambda : Constant(8*"0")
+C8B_1 = lambda : Constant("1"+7*"0")
 
-c16b_0 = lambda : Constant(16*"0")
-c16b_1 = lambda : Constant("1"+15*"0")
+C16B_0 = lambda : Constant(16*"0")
+C16B_1 = lambda : Constant("1"+15*"0")
 
-c32b_0 = lambda : Constant(32*"0")
-c32b_1 = lambda : Constant("1"+31*"0")
+C32B_0 = lambda : Constant(32*"0")
+C32B_1 = lambda : Constant("1"+31*"0")
 
-reg_size = 32
-opcode_size = 5
+REG_SIZE = 32
+REG_ADDR_SIZE = 5
+REG_IDS = [Variable("x"+str(i), REG_SIZE) for i in range(REG_SIZE)]
+
+OPCODE_SIZE = 5
+
+MEMORY_ADDR_SIZE = 16
+
+ROM_WORD_SIZE = 8
+
+LITTLE_ENDIAN = 0
+BIG_ENDIAN = 1

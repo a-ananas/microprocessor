@@ -2,7 +2,7 @@ from lib_carotte import *
 
 from global_utils import const
 
-bs = const.reg_size
+bs = const.REG_SIZE
 
 
 def sllk(a,k): 
