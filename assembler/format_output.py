@@ -1,4 +1,4 @@
-file_name = "tests/test.i"
+file_name = "tests/double_dabble.i"
 
 file = open(file_name, 'r')
 lines = file.readlines()
