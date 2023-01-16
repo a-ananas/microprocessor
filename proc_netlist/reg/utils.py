@@ -75,6 +75,6 @@ def write_value_in_reg(reg_address: Variable, wdata: Variable, wenable: Variable
         # if write enable assign new value
         new_value_reg = Mux(wenable, old_value_i, new_value)
         # change variable to correct register name
-        new_value_reg.rename(reg_id)
+        new_value.set_as_output(reg_id)
 
     return
