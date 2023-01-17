@@ -164,6 +164,17 @@ let stringToValue s =
     | _ -> raise (SystemError "Invalid user input!\n")
 ;;
 
+(* print the given time *)
+let print_time time out =
+  (* fprintf out "cur_unix_time: %f\n" time; *)
+  let tm = Unix.gmtime time in
+    begin
+      let _ = ignore(Sys.command "clear") in ();
+      fprintf out "@.";
+      fprintf out "\r%02d/%02d/%04d, %02d:%02d:%02d" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec;
+    end
+;;
+
 
 (* init the environment *)
 let initEnv p = 
@@ -390,12 +401,17 @@ let showResults program env =
       match outs with
       | [] -> ()
       | out::outs ->
-        begin
-          let value = Env.find out env in
-              fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
-              (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
-          aux outs
-        end
+        if String.equal out "x2" 
+          then
+            begin
+              let value = Env.find out env in
+                let time = Float.of_int (valueToInt value) in
+                  print_time time fStdout;
+                (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
+                (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
+              aux outs
+            end
+          else aux outs
     in (aux outputs)
   end
 ;;
@@ -496,7 +512,7 @@ let updateUnixTime ram =
     then 
       begin
         unix_time := cur_time;
-        let ram = (Env.add ramAddrCounter (floatToVBitArray !unix_time ramWordSize) ram) in
+        (* let ram = (Env.add ramAddrCounter (floatToVBitArray !unix_time ramWordSize) ram) in *)
           let new_val = (Array.make ramWordSize false) in
             begin
               (Array.set new_val 0 true);
@@ -594,14 +610,6 @@ let initROM addrSize wordSize =
 ;;
 
 
-(* print the current time *)
-let print_time out =
-  fprintf out "cur_unix_time: %f\n" !unix_time;
-  let tm = Unix.gmtime !unix_time in
-    fprintf out "%d/%d/%d, %d:%d:%d\n\n" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec
-;;
-
-
 (* simulate a netlist *)
 let simulator program number_steps = 
   (* Netlist.print_program stdout program; *)
@@ -620,11 +628,12 @@ let simulator program number_steps =
         then 
           begin
             fprintf fStdout "\n\nDone, final output:\n";
-            (showResults program env)
+            (showResults program env);
+            fprintf fStdout "\n"
           end
       else
         begin
-          fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1));
+          (* fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1)); *)
           (* update time *)
           let envRAM = updateUnixTime envRAM in
           (* ask for inputs *)
