@@ -75,6 +75,95 @@ let argToAddress arg addrSize env =
   let value = calculArg arg env in (valueToAddress value addrSize)
 ;;
 
+(* transform an int in base 10 into a VBitArray *)
+let intToVBitArray vint length =
+  let nth_bit x n = x land (1 lsl n) <> 0 in
+  let bitarray length x = Array.init length (nth_bit x) in
+    (VBitArray (bitarray length vint))
+;;
+
+(* transform a float into a VBitArray *)
+let floatToVBitArray vfloat length =
+  let vint = Stdlib.int_of_float vfloat in
+    (intToVBitArray vint length)
+;;
+
+(* raise an integer n to the power of a *)
+let rec pow a = function
+  | 0 -> 1
+  | 1 -> a
+  | n -> 
+    let b = pow a (n / 2) in
+    b * b * (if n mod 2 = 0 then 1 else a)
+;;
+
+
+(* cast an integer into a binary string *)
+let intToBinString x len =
+  let rec d2b y res = match y with 
+    | 0 -> res
+    | _ -> let tmp = if ((y mod 2) = 1) then "1" else "0" in 
+      (d2b (y/2) (res^tmp))
+  in
+  let bin = (d2b x "") in
+  let deltaSize = len - (String.length bin) in
+  let deltaStr = String.make deltaSize '0' in bin^deltaStr
+;;
+
+
+(* cast a VBitArray into an integer *)
+let vBitArrayToInt vbit =
+  let len = Array.length vbit in
+  let rec aux index res =
+    match index with
+    | i when i>= len -> res
+    | _ -> 
+      let res = 
+        if (Array.get vbit index) 
+          then res + (pow 2 index) else res
+        in (aux (index+1) res)
+  in (aux 0 0)
+;;
+
+
+(* cast a value into an integer *)
+let valueToInt v = 
+  match v with
+  | VBit b -> if b then 1 else 0
+  | VBitArray arr -> (vBitArrayToInt arr)
+;;
+
+(* cast a char to a boolean *)
+let charToBool c =
+  match c with
+  | '0' -> false
+  | '1' -> true
+  | _ -> raise (SystemError "Unexpecter character!\n")
+;;
+
+(* cast a string to a boolean array *)
+let stringToArray s len =
+  let arr = Array.make len false in
+  let rec aux len =
+    match len with 
+    | 0 -> arr 
+    | i -> 
+      begin
+        arr.(i-1) <- (charToBool s.[i-1]);
+        (aux (len-1))
+      end
+  in (aux len)
+;;
+
+(* cast a string to a Value *)
+let stringToValue s = 
+  let len = (String.length s) in
+    match len with
+    | 1 -> let b = charToBool s.[0] in VBit(b)
+    | l when (l > 1) -> let arr = (stringToArray s l) in VBitArray(arr)
+    | _ -> raise (SystemError "Invalid user input!\n")
+;;
+
 
 (* init the environment *)
 let initEnv p = 
@@ -304,6 +393,7 @@ let showResults program env =
         begin
           let value = Env.find out env in
               fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
+              (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
           aux outs
         end
     in (aux outputs)
@@ -322,37 +412,6 @@ let checkInput input =
         | i -> if (not (charCorrect input.[i-1])) then false
                 else (aux (len-1))
       in (aux len)
-;;
-
-(* cast a char to a boolean *)
-let charToBool c =
-  match c with
-  | '0' -> false
-  | '1' -> true
-  | _ -> raise (SystemError "Unexpecter character!\n")
-;;
-
-(* cast a string to a boolean array *)
-let stringToArray s len =
-  let arr = Array.make len false in
-  let rec aux len =
-    match len with 
-    | 0 -> arr 
-    | i -> 
-      begin
-        arr.(i-1) <- (charToBool s.[i-1]);
-        (aux (len-1))
-      end
-  in (aux len)
-;;
-
-(* cast a string to a Value *)
-let stringToValue s = 
-  let len = (String.length s) in
-    match len with
-    | 1 -> let b = charToBool s.[0] in VBit(b)
-    | l when (l > 1) -> let arr = (stringToArray s l) in VBitArray(arr)
-    | _ -> raise (SystemError "Invalid user input!\n")
 ;;
 
 
@@ -410,28 +469,6 @@ let catchException exc =
     | _ -> raise exc
 ;;
 
-(* raise an integer n to the power of a *)
-let rec pow a = function
-  | 0 -> 1
-  | 1 -> a
-  | n -> 
-    let b = pow a (n / 2) in
-    b * b * (if n mod 2 = 0 then 1 else a)
-;;
-
-
-(* cast an integer into a binary string *)
-let intToBinString x len =
-  let rec d2b y res = match y with 
-    | 0 -> res
-    | _ -> let tmp = if ((y mod 2) = 1) then "1" else "0" in 
-      (d2b (y/2) (res^tmp))
-  in
-  let bin = (d2b x "") in
-  let deltaSize = len - (String.length bin) in
-  let deltaStr = String.make deltaSize '0' in bin^deltaStr
-;;
-
 
 (* init an empty memory *)
 let initMemEmpty addrSize wordSize = 
@@ -449,19 +486,6 @@ let initMemEmpty addrSize wordSize =
       let env = (Env.add (intToBinString curAddr addrSize) (VBitArray(Array.make wordSize false)) env)
         in (forAllAddresses (curAddr+1) env)
     in (forAllAddresses 0 env)
-;;
-
-(* transform an int in base 10 into a VBitArray *)
-let intToVBitArray vint length =
-  let nth_bit x n = x land (1 lsl n) <> 0 in
-  let bitarray length x = Array.init length (nth_bit x) in
-    (VBitArray (bitarray length vint))
-;;
-
-(* transform a float into a VBitArray *)
-let floatToVBitArray vfloat length =
-  let vint = Stdlib.int_of_float vfloat in
-    (intToVBitArray vint length)
 ;;
 
 
