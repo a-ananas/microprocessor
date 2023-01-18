@@ -52,11 +52,14 @@ def get_value_from_reg(reg_address: Variable) -> Variable:
     return reg_value
 
 
-def write_value_in_reg(reg_address: Variable, wdata: Variable, wenable: Variable) -> Variable:
+def write_value_in_reg(reg_address: Variable, wdata: Variable, wenable: Variable, rs1: Variable, rs2: Variable) -> Variable:
     # test sizes
     assert(reg_address.bus_size == const.REG_ADDR_SIZE)
     assert(wdata.bus_size == const.REG_SIZE)
     assert(wenable.bus_size == 1)
+
+    res1 = const.C32B_0()
+    res2 = const.C32B_0()
 
     # for each register add a mux : selector = addres, 0? old value, 1? wdata
     for i in range(const.REG_SIZE):
@@ -66,6 +69,10 @@ def write_value_in_reg(reg_address: Variable, wdata: Variable, wenable: Variable
 
         selector_i = utils.test_eq(addr_i, reg_address)
         assert(selector_i.bus_size == 1)
+        selector_res1 = utils.test_eq(addr_i, rs1)
+        assert(selector_res1.bus_size == 1)
+        selector_res2 = utils.test_eq(addr_i, rs2)
+        assert(selector_res2.bus_size == 1)
 
         old_value_i = get_value_from_reg(addr_i)
         assert(old_value_i.bus_size == const.REG_SIZE)
@@ -74,7 +81,13 @@ def write_value_in_reg(reg_address: Variable, wdata: Variable, wenable: Variable
 
         # if write enable assign new value
         new_value_reg = Mux(wenable, old_value_i, new_value)
+
+        # get i1 and i2
+        res1 = Mux(selector_res1, res1, new_value_reg)
+        res2 = Mux(selector_res2, res2, new_value_reg)
+
         # change variable to correct register name
         new_value_reg.set_as_output(reg_id)
 
-    return
+
+    return res1, res2

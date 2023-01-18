@@ -505,8 +505,8 @@ let doEq eq env prevEnv envROM envRAM prevEnvRAM =
       let newEnv = Env.add ident value env in (newEnv, prevEnv, newEnvRAM, prevEnvRAM)
 ;;
 
-(* print the results *)
-(* let showResults program env =
+(* print the results in the clock format *)
+let showResultsClk program env =
   let outputs = program.p_outputs in
   begin
     let rec aux outs res =
@@ -532,10 +532,11 @@ let doEq eq env prevEnv envROM envRAM prevEnvRAM =
       let values = (aux outputs []) in 
         (printClkFormat values fStdout)
   end
-;; *)
+;;
 
 (* print the results *)
-let showResults program env =
+let showResults program env step =
+  fprintf fStdout "Step %d:\n" step;
   let outputs = program.p_outputs in
   begin
     let rec aux outs =
@@ -763,12 +764,11 @@ let simulator program number_steps =
         then 
           begin
             fprintf fStdout "\n\nDone, final output:\n";
-            (showResults program env);
+            (showResults program env 0);
             fprintf fStdout "\n"
           end
       else
         begin
-          (* fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1)); *)
           (* update time *)
           let envRAM = updateUnixTime envRAM in
           (* ask for inputs *)
@@ -787,7 +787,7 @@ let simulator program number_steps =
                 let (env, envRAM) = (forEqs eqs env env envRAM envRAM) 
             in 
               begin 
-                (showResults program env);
+                (showResults program env (number_steps - (numSteps-1)));
                 (forNbStep (numSteps-1) env envRAM)
               end
           end
