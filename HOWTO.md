@@ -18,8 +18,18 @@ To run a program written in our assembly language, you can do the following:
 Or, if you want the programm to run only for a given amount of step, you can add an option at the end of the command:
 
 ```sh
-# ./run.sh <file.x> <nb_step>
+# ./run.sh -n <nb_step> <file.x>
 #
-# This example will run the program ./assembler/tests/test_ram.x during 10 simulator steps
-./run.sh ./assembler/tests/test_ram.x 10
+# This example will run the program ./assembler/tests/test_ram.x during 11 simulator steps
+./run.sh -n 11 ./assembler/tests/test_ram.x
+```
+
+You can also add an option to choose if you want to print the registers at each step or to print a 
+7-segment formated output to represent a clock (using registers from x0 to x13).
+
+```sh
+# ./run.sh -n <nb_step> --clk <file.x>
+#
+# This example will run the program ./assembler/tests/test_7seg.x during 11 simulator steps and output it as a clock
+./run.sh -n 11 --clk ./assembler/tests/test_7seg.x
 ```

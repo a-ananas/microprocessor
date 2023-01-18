@@ -4,6 +4,9 @@ open Format;;
 (* the option to only show the running program *)
 let print_only = ref false
 
+(* the option to show steps as the clock format *)
+let clk_format = ref false
+
 (* the option to specify the number of cycle on wich run the program *)
 let number_steps = ref (-1)
 
@@ -536,19 +539,23 @@ let showResultsClk program env =
 
 (* print the results *)
 let showResults program env step =
-  fprintf fStdout "Step %d:\n" step;
-  let outputs = program.p_outputs in
   begin
-    let rec aux outs =
-      match outs with
-      | [] -> ()
-      | out::outs ->
-        begin
-          let value = Env.find out env in
-              fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
-          aux outs
-        end
-    in (aux outputs)
+    if step >= 0 
+      then fprintf fStdout "Step %d:\n" step
+      else ();
+    let outputs = program.p_outputs in
+    begin
+      let rec aux outs =
+        match outs with
+        | [] -> ()
+        | out::outs ->
+          begin
+            let value = Env.find out env in
+                fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
+            aux outs
+          end
+      in (aux outputs)
+    end
   end
 ;;
 
@@ -764,7 +771,9 @@ let simulator program number_steps =
         then 
           begin
             fprintf fStdout "\n\nDone, final output:\n";
-            (showResults program env 0);
+            if !clk_format 
+              then (showResultsClk program env)
+              else (showResults program env (-1));
             fprintf fStdout "\n"
           end
       else
@@ -786,8 +795,10 @@ let simulator program number_steps =
               in
                 let (env, envRAM) = (forEqs eqs env env envRAM envRAM) 
             in 
-              begin 
-                (showResults program env (number_steps - (numSteps-1)));
+              begin
+                if !clk_format 
+                  then (showResultsClk program env)
+                  else (showResults program env (number_steps - (numSteps-1)));
                 (forNbStep (numSteps-1) env envRAM)
               end
           end
@@ -818,6 +829,7 @@ let main () =
     [
       "-n", Arg.Set_int number_steps, "Number of steps to simulate";
       "--print", Arg.Set print_only, "Only prints the program";
+      "--clk", Arg.Set clk_format, "Print steps in 7-segments when running a clock";
       "-rom", Arg.Set_string rom_init_file, "The file used to initiate the ROM"
     ]
     compile
