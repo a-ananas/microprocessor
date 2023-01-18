@@ -34,8 +34,19 @@ let ramAddrSize = 16;;
 let ramWordSize = 32;;
 
 (* ram special addresses *)
-let ramAddrCounter = "0000000000000000"
-let ramAddrUpdt    = "1000000000000000" 
+let ramAddrCounter = "0000000000000000";;
+let ramAddrUpdt    = "1000000000000000";;
+
+(* registers list of ids *)
+let regList = ["x0";"x1";"x2";"x3";"x4";"x5";"x6";"x7";"x8";
+              "x9";"x10";"x11";"x12";"x13";"x14";"x15";"x16";"x17";"x18";
+              "x19";"x20";"x21";"x22";"x23";"x24";"x25";"x26";"x27";"x28";
+              "x29";"x30";"x31"];;
+
+(* registers used as output for tge digital clock *)
+let regListClk = ["x0";"x1";"x2";"x3";"x4";"x5";"x6";"x7";"x8";
+                  "x9";"x10";"x11";"x12";"x13"]
+
 
 
 (* return the Value of an argument *)
@@ -173,6 +184,107 @@ let print_time time out =
       fprintf out "@.";
       fprintf out "\r%02d/%02d/%04d, %02d:%02d:%02d" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec;
     end
+;;
+
+(* 7-segment *)
+(* ##### *)
+(* # A # *)
+(* #FGB# *)
+(* #EDC# *)
+(* ##### *)
+(* return the string value for the A segment given 4 bits *)
+let get7SegA a b c d =
+  let res = ((not b) && (not d)) || c || (b && d) || a in
+    if res then "_" else " "
+;; 
+
+(* return the string value for the B segment given 4 bits *)
+let get7SegB a b c d =
+  let res = (not b) || ((not c) && (not d)) || (c && d) in
+    if res then "|" else " "
+;;
+
+(* return the string value for the C segment given 4 bits *)
+let get7SegC a b c d =
+  let res = (not c) || d || b in
+    if res then "|" else " "
+;;
+
+(* return the string value for the D segment given 4 bits *)
+let get7SegD a b c d =
+  let res = ((not b) && (not d)) || ((not b) && c) || (b && (not c) && d) || (c && (not d)) || a in
+    if res then "_" else " "
+;;
+
+(* return the string value for the E segment given 4 bits *)
+let get7SegE a b c d =
+  let res = ((not b) && (not d)) || (c && (not d)) in
+    if res then "|" else " "
+;;
+
+(* return the string value for the F segment given 4 bits *)
+let get7SegF a b c d =
+  let res = ((not c) && (not d)) || (b && (not c)) || (b && (not d)) || a in
+    if res then "|" else " "
+;;
+
+(* return the string value for the G segment given 4 bits *)
+let get7SegG a b c d =
+  let res = ((not b) && c) || (b && (not c)) || a || (b && (not d)) in
+    if res then "_" else " "
+;;
+
+(* get the top zone of a 7-segment *)
+let get7SegTop a b c d =
+  " " ^ (get7SegA a b c d) ^ " "
+;;
+
+(* get the middle zone of a 7-segment *)
+let get7SegMid a b c d =
+  (get7SegF a b c d) ^ (get7SegG a b c d) ^ (get7SegB a b c d)
+;;
+
+(* get the bottom zone of a 7-segment *)
+let get7SegBot a b c d =
+  (get7SegE a b c d) ^ (get7SegD a b c d) ^ (get7SegC a b c d)
+;;
+
+(* print format yyyy/dd/mm hh:mm:ss in 7-segment from a list of 4-tuple bits *)
+let printClkFormat vlist out = 
+  let rec aux vlist res = 
+    match vlist with 
+    | [] -> res
+    | (a,b,c,d)::vlist -> 
+      let top,mid,bot = res in
+        let top = ((get7SegTop a b c d)^top) in
+        let mid = ((get7SegMid a b c d)^mid) in
+        let bot = ((get7SegBot a b c d)^bot) in
+          (aux vlist (top,mid,bot))
+  in
+    let top,mid,bot = (aux vlist ("","","")) in
+    let top = (String.sub top 0 12)^"    "^
+              (String.sub top 12 6)^"    "^
+              (String.sub top 18 6)^"   "^
+              (String.sub top 24 6)^"   "^
+              (String.sub top 30 6)^"   "^
+              (String.sub top 36 6) in
+    let mid = (String.sub mid 0 12)^"  / "^
+              (String.sub mid 12 6)^"  / "^
+              (String.sub mid 18 6)^"   "^
+              (String.sub mid 24 6)^" : "^
+              (String.sub mid 30 6)^" : "^
+              (String.sub mid 36 6) in
+    let bot = (String.sub bot 0 12)^" /  "^
+              (String.sub bot 12 6)^" /  "^
+              (String.sub bot 18 6)^"   "^
+              (String.sub bot 24 6)^" : "^
+              (String.sub bot 30 6)^" : "^
+              (String.sub bot 36 6) in
+      begin
+        let _ = ignore(Sys.command "clear") in ();
+        fprintf out "@.";
+        fprintf out "\r%s\n%s\n%s" top mid bot
+      end
 ;;
 
 
@@ -397,22 +509,28 @@ let doEq eq env prevEnv envROM envRAM prevEnvRAM =
 let showResults program env =
   let outputs = program.p_outputs in
   begin
-    let rec aux outs =
+    let rec aux outs res =
       match outs with
-      | [] -> ()
+      | [] -> res
       | out::outs ->
-        if String.equal out "x2" 
+        if List.mem out regListClk
           then
             begin
               let value = Env.find out env in
-                let time = Float.of_int (valueToInt value) in
-                  print_time time fStdout;
-                (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
-                (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
-              aux outs
+                match value with 
+                  | VBitArray arr ->
+                    (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
+                    let a,b,c,d = (Array.get arr 3), (Array.get arr 2), (Array.get arr 1), (Array.get arr 0) in
+                    (* let time = Float.of_int (valueToInt value) in *)
+                      (* print_time time fStdout; *)
+                    (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
+                      (aux outs ((a,b,c,d)::res))
+                  | _ -> failwith "register must be of size 32"
             end
-          else aux outs
-    in (aux outputs)
+          else aux outs res
+    in 
+      let values = (aux outputs []) in 
+        (printClkFormat values fStdout)
   end
 ;;
 
