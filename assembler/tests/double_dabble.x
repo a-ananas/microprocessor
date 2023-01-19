@@ -37,9 +37,9 @@ add x20 x20 x5
 slli x31 x31 1
 andi x31 x31 127
 
-# condition de boucle : si on a une valeur plus grande que 4 on doit ajouter 3 et passer aux centaines
+# condition de boucle : si on a une valeur plus grande que 4 on doit ajouter 3 et passer aux dizaines
 blt x20 x29 x20 PLUS_3
-blt x31 x28 x31 INF_100
+bne x31 x28 x31 INF_100
 jal x31 SUCCESS
 
 PLUS_3:
@@ -47,11 +47,13 @@ addi x20 x20 3
 jal x31 INF_100
 
 SUCCESS:
+#découper les registres de sortie
 add x21 x21 x20
 srli x21 x21 4
 jal x20 LOOP_SUX
 
 LOOP_SUX:
+#pour pas que le simu fasse des digueries
 addi x21 x21 0
 jal x21 LOOP_SUX
 
