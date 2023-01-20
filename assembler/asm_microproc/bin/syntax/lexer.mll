@@ -1,4 +1,3 @@
-
 {
   open Lexing
   open Parser
@@ -61,7 +60,7 @@
     let h = Hashtbl.create 32 in
     List.iter (fun (key, token) -> Hashtbl.add h key token) instr_tbl;
     (* create the registers 0 -> 16 with a binary address in a string*)
-    let regs = List.init 16 (fun i -> ("x"^(string_of_int i), (REG(int_to_binary i 5)))) in 
+    let regs = List.init 32 (fun i -> ("x"^(string_of_int i), (REG(int_to_binary i 5)))) in 
     List.iter (fun (key, token) -> Hashtbl.add h key token) regs;
     fun key -> 
       try Hashtbl.find h key with _ -> LABEL key

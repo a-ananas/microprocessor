@@ -70,7 +70,7 @@ Our instructions will have the following opcodes:
 |     Ori     |   I    | 00110  |  ori x0 x1 1   |             x0 = x1 \| 1             |
 |    Xori     |   I    | 00111  |  xori x0 x1 1  |             x0 = x1 ⊕ 1              |
 |     Add     |   R    | 01000  | add x0 x1 x2 1 |             x0 = x1 + x2             |
-|     Sub     |   I    | 01001  | sub x0 x1 x2 1 |             x0 = x1 − x2             |
+|     Sub     |   R    | 01001  | sub x0 x1 x2 1 |             x0 = x1 − x2             |
 |     Srl     |   R    | 01010  | srl x0 x1 x2 1 |    x0 = x1 \>\> x2 (0 extended)    |
 |     Sra     |   R    | 01011  | sra x0 x1 x2 1 |  x0 = x1 \>\> x2 (sign extended)   |
 |     Sll     |   R    | 01100  | sll x0 x1 x2 1 |          x0 = x1 \<\< x2           |

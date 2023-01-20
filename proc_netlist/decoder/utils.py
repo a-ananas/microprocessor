@@ -54,7 +54,7 @@ def get_field_I(instr: Variable, opcode: Variable) -> tuple[Variable,Variable,Va
     imm1 = instr[15:const.REG_SIZE] + Constant(15 * '1')
     imm0 = instr[15:const.REG_SIZE] + Constant(15 * '0')
     imm = Mux(instr[const.REG_SIZE-1], imm0, imm1)
-    # must be equal 0 if 01 + any (except 000)
+    # must be equal 0 if start by 10 (except lw 10000)
     wenableReg = Not(~opcode[4] & opcode[3] & (opcode[2] | opcode[1] | opcode[0]))
     return (imm, wenableReg, const.C1B_0())
 
@@ -66,6 +66,7 @@ def get_field_R(instr: Variable, opcode: Variable) -> tuple[Variable,Variable,Va
     imm1 = instr[20:const.REG_SIZE] + Constant(20 * '1')
     imm0 = instr[20:const.REG_SIZE] + Constant(20 * '0')
     imm = Mux(instr[const.REG_SIZE-1], imm0, imm1)
-    wenableReg = Mux(opcode[0], const.C1B_1(), Mux(opcode[1], const.C1B_0(), const.C1B_1())) # all the R not starting by 10 are yes on wenableReg
+    # all the R not starting by 10 are yes on wenableReg
+    wenableReg = Mux(opcode[4], const.C1B_1(), Mux(opcode[3], const.C1B_0(), const.C1B_1()))
     wenableRAM = utils.test_eq(opcode, Constant("10001")) # only true for Sw
     return (imm, wenableReg, wenableRAM)

@@ -19,6 +19,7 @@ def alu(opcode: Variable, i1: Variable, i2: Variable) -> Variable:
     (sub_op, c_sub) = arith.addn(i1, i2, const.C1B_1())
     or_op  = logic.orn(i1, i2)
     xor_op = logic.xorn(i1, i2)
+    # xor_op.set_as_output("xor_op")
     and_op = logic.andn(i1, i2)
     srl_op = shift.srln(i1, i2)
     sra_op = shift.sran(i1, i2)
@@ -30,10 +31,12 @@ def alu(opcode: Variable, i1: Variable, i2: Variable) -> Variable:
     jalr_op = const.C32B_1()
 
     eq_op  = comp.eqn(i1, i2)
+    # eq_op.set_as_output("eq_op")
     beq_op = Mux(eq_op, const.C32B_0(), const.C32B_1())
     neq_op = ~eq_op
     bne_op = Mux(neq_op, const.C32B_0(), const.C32B_1()) 
-    lt_op  = comp.ltn_natural(i1, i1, const.C1B_1())
+    lt_op  = comp.ltn_natural(i1, i2, const.C1B_0())
+    # lt_op.set_as_output("lt_op")
     blt_op = Mux(lt_op, const.C32B_0(), const.C32B_1()) # same for slt operations
     geq_op = ~lt_op
     bge_op = Mux(geq_op, const.C32B_0(), const.C32B_1())

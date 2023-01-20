@@ -557,8 +557,8 @@ let showResults program env step =
         | out::outs ->
           begin
             let value = Env.find out env in
-                fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
-                (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
+                (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
+                fprintf fStdout "=> %s = %d@." out (valueToInt value);
             aux outs
           end
       in (aux outputs)
@@ -675,7 +675,8 @@ let updateUnixTime ram =
 (* init the RAM special addresses *)
 let initRAMSpecialAddr time ram wordSize =
   let tm = Unix.gmtime time in
-  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour, tm.tm_mday, tm.tm_mon, tm.tm_year in
+  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour, tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900 in
+  (* fprintf fStdout "%d, %d, %d, %d, %d, %d\n@." sec min hrs day mth yrs; *)
   (* global second counter *)
   let ram = (Env.add ramAddrCounter (floatToVBitArray time wordSize) ram) in
   (* seconds *)
