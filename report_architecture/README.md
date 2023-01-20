@@ -78,7 +78,7 @@ Our instructions will have the following opcodes:
 |     Or      |   R    | 01110  | or x0 x1 x2 1  |            x0 = x1 \| x2             |
 |     Xor     |   R    | 01111  | xor x0 x1 x2 1 |             x0 = x1 ⊕ x2             |
 |     Lw      |   I    | 10000  |   lw x0 x1 1   |             x0 = Ram(x1)             |
-|     Sw      |   R    | 10001  | sw x0 x1 x2 1  |             Ram(x1) = x2             |
+|     Sw      |   R    | 10001  | sw x0 x1 x2 1  |             Ram(x2) = x1             |
 |     Beq     |   R    | 10011  | beq x0 x1 x2 1 | rdi = (x1 == x2) ? rdi + 1 : rdi + 4 |
 |     Bne     |   R    | 10100  | bne x0 x1 x2 1 | rdi = (x1 != x2) ? rdi + 1 : rdi + 4 |
 |     Blt     |   R    | 10101  | blt x0 x1 x2 1 | rdi = (x1 \< x2) ? rdi + 1 : rdi + 4 |

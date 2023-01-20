@@ -31,6 +31,7 @@ jal x21 MAIN_LOOP                   # infinite loop
 UPDATE_COUNTER:
 add x13 x13 x21 0                   # update the seconds
 xor x21 x21 x21 0                   # put 0 in clock signal register
+sw x21 x21 x20 0                    # reset ram clock signal
 
 CHECK_MODULOS_SEC:
 bge x13 x13 x31 CHECK_MODULOS_MIN   # if nb_sec >= 60 check the minutes
