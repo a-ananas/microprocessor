@@ -39,6 +39,12 @@ let ramWordSize = 32;;
 (* ram special addresses *)
 let ramAddrCounter = "0000000000000000";;
 let ramAddrUpdt    = "1000000000000000";;
+let ramAddrSec     = "0100000000000000";;
+let ramAddrMin     = "1100000000000000";;
+let ramAddrHrs     = "0010000000000000";;
+let ramAddrDay     = "1010000000000000";;
+let ramAddrMth     = "0110000000000000";;
+let ramAddrYrs     = "1110000000000000";;
 
 (* registers list of ids *)
 let regList = ["x0";"x1";"x2";"x3";"x4";"x5";"x6";"x7";"x8";
@@ -552,6 +558,7 @@ let showResults program env step =
           begin
             let value = Env.find out env in
                 fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
+                (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
             aux outs
           end
       in (aux outputs)
@@ -665,6 +672,27 @@ let updateUnixTime ram =
     else ram
 ;;
 
+(* init the RAM special addresses *)
+let initRAMSpecialAddr time ram wordSize =
+  let tm = Unix.gmtime time in
+  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour, tm.tm_mday, tm.tm_mon, tm.tm_year in
+  (* global second counter *)
+  let ram = (Env.add ramAddrCounter (floatToVBitArray time wordSize) ram) in
+  (* seconds *)
+  let ram = (Env.add ramAddrSec (intToVBitArray sec wordSize) ram) in
+  (* minutes *)
+  let ram = (Env.add ramAddrMin (intToVBitArray min wordSize) ram) in
+  (* hours *)
+  let ram = (Env.add ramAddrHrs (intToVBitArray hrs wordSize) ram) in
+  (* days *)
+  let ram = (Env.add ramAddrDay (intToVBitArray day wordSize) ram) in
+  (* months *)
+  let ram = (Env.add ramAddrMth (intToVBitArray mth wordSize) ram) in
+  (* years *)
+  let ram = (Env.add ramAddrYrs (intToVBitArray yrs wordSize) ram) in 
+    ram
+;;
+
 
 (* init the RAM *)
 let initRAM addrSize wordSize =
@@ -672,7 +700,7 @@ let initRAM addrSize wordSize =
   let ram = (initMemEmpty addrSize wordSize) in
     (* adding unix time in the special address *)
     unix_time := Unix.time();
-    (Env.add ramAddrCounter (floatToVBitArray !unix_time wordSize) ram)
+    (initRAMSpecialAddr (!unix_time) ram wordSize)
 ;;
 
 (* extends a string to a given size by adding zeros at the end *)

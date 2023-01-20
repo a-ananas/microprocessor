@@ -116,7 +116,7 @@ Our instructions will have the following opcodes:
 		Beq & R & 10011 & beq x0 x1 x2 1& rdi = (x1 $=$ x2) ? rdi + 1 : rdi + 4\\
 		Bne & R & 10100 & bne x0 x1 x2 1& rdi = (x1 $\neq$ x2) ? rdi + 1 : rdi + 4\\
 		Blt & R & 10101 & blt x0 x1 x2 1& rdi = (x1 $<$ x2) ? rdi + 1 : rdi + 4\\
-		% Blti & I & 10110 & blti x0 x1 x2 1& rdi = (x1 $=$ x2) ? rdi + 1 : rdi + 4\\
+		% Blti & I & 10110 & blti x0 x1 1& rdi = (x1 $<$ 1) ? rdi + 1 : rdi + 4\\
 		Bge & R & 10111 & bge x0 x1 x2 1& rdi = (x1 $\geq$ x2) ? rdi + 1 : rdi + 4\\
 		% Lui
 		% Auipc
