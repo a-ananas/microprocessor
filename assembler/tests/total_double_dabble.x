@@ -30,6 +30,7 @@ xor  x7 x7 x7
 xor  x9 x9 x9
 xor  x11 x11 x11
 xor  x13 x13 x13
+xor  x21 x21 x21
 addi x3 x3 2023
 addi x7 x7 1
 addi x5 x5 21
@@ -37,19 +38,20 @@ addi x9 x9 13
 addi x11 x11 59
 addi x13 x13 59
 
+
 YRS:
 addi x26 x3 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_YRS:
-andi x25 x26 16384
-srli x25 x25 14
+andi x25 x26 4096
+srli x25 x25 12
 slli x23 x23 1
 add  x23 x23 x25
 slli x26 x26 1
 
-andi x24 x26 16383
-beq  x24 x24 x19 END_YRS
+andi x24 x26 4095
+beq  x24 x24 x21 END_YRS
 
 jal x23 TEST_UNT
 
@@ -105,7 +107,7 @@ add  x23 x23 x25
 slli x26 x26 1
 
 andi x24 x26 127
-beq  x24 x24 x19 END_MTH
+beq  x24 x24 x21 END_MTH
 
 jal x23 TEST_UMH
 
@@ -143,7 +145,7 @@ add  x23 x23 x25
 slli x26 x26 1
 
 andi x24 x26 127
-beq  x24 x24 x19 END_DAY
+beq  x24 x24 x21 END_DAY
 
 jal x23 TEST_UDY
 
@@ -181,7 +183,7 @@ add  x23 x23 x25
 slli x26 x26 1
 
 andi x24 x26 127
-beq  x24 x24 x19 END_HUR
+beq  x24 x24 x21 END_HUR
 
 jal x23 TEST_UHR
 
@@ -219,7 +221,7 @@ add  x23 x23 x25
 slli x26 x26 1
 
 andi x24 x26 127
-beq  x24 x24 x19 END_MIN
+beq  x24 x24 x21 END_MIN
 
 jal x23 TEST_UMN
 
@@ -257,7 +259,7 @@ add  x23 x23 x25
 slli x26 x26 1
 
 andi x24 x26 127
-beq  x24 x24 x19 END_SEC
+beq  x24 x24 x21 END_SEC
 
 jal x23 TEST_USC
 
