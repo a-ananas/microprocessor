@@ -4,6 +4,9 @@
 *.fls
 *.fdb_latexmk
 *.gz
+*.toc
+*.nav
+*.snm
 
 proc_netlist/main.py
 

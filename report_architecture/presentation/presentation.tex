@@ -15,6 +15,10 @@
 \setbeamerfont{alerted text}{series=\bfseries}
 \setbeamercolor{itemize item}{fg=structure!50!red}
 
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
 \title{Horloge numérique}
 \subtitle{Systèmes numériques}
 \author{Oscar Garnier \and Yannis Kedadry \and Antoine Anastassiades}
@@ -25,9 +29,63 @@
 
 	\frame{\titlepage}
 
-	\section{La section 1}
 	\begin{frame}
-		
+		\frametitle{Sommaire}
+		\tableofcontents
 	\end{frame}
 
+	\section{Le simulateur de netlist}
+	\begin{frame}
+		\frametitle{Le simulateur de netlist}	
+		\begin{itemize}
+			\item OCaml
+			\item Douleur
+			\item Je déteste les tris topologiques
+		\end{itemize}
+	\end{frame}
+
+	\section{Choix de l'architecture}
+	\subsection{RISC-\rom{5}}
+	\begin{frame}
+		\frametitle{Ensemble d'instructions}	
+		Faire un tableau - cf truc cool de Yannis
+	\end{frame}
+
+	\section{L'assembleur}
+	\begin{frame}
+		\frametitle{Correspondance syntaxe-addresses}
+		\def\arraystretch{1.5}
+		\begin{tabular}{c*{5}{p{0.15\textwidth}}}
+			&31\hfill20&19\hfill15&14\hfill10&9\hfill5&4\hfill0\\
+			\cline{2-6}
+			R&\multicolumn{1}{|c|}{immédiat}&\multicolumn{1}{|c|}{rs2}&\multicolumn{1}{|c|}{rs1}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+			\cline{2-6}
+			I&\multicolumn{2}{|c|}{immédiat}&\multicolumn{1}{|c|}{rs}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+			\cline{2-6}
+			U&\multicolumn{3}{|c|}{immédiat}&\multicolumn{1}{|c|}{rd}&\multicolumn{1}{|c|}{opcode}\\
+			\cline{2-6}
+		\end{tabular}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Les opcodes}
+			\def\arraystretch{2.5}
+			\begin{tabular}{p{0.08\textwidth}||c*{8}{p{0.08\textwidth}}}
+				& 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+				\cline{1-9}
+				00 & Addi & & Srli & Srai & Slli & Andi & Ori & Xori \\
+				\cline{1-9}
+				01 & Add & Sub & Srl & Sra & Sll & And & Or & Xor \\
+				\cline{1-9}
+				10 & Lw & Sw & & Beq & Bne & Blt & Blti & Bge \\
+				\cline{1-9}
+				11 & Lui & Auipc & Jal & Jalr & & & Slt & Slti \\
+			\end{tabular}
+	\end{frame}
+
+	\section{Le simulateur de netlist}
+	\begin{frame}
+
+	\end{frame}
+		
 \end{document}
