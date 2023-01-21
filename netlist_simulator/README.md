@@ -49,12 +49,8 @@ Behavior for memories:
 </ul>
 
 
-## DIFFICULTIES
+## CLOCK
 
 
 ---
-
-It took me some time to understand properly how to manage the RAM and the ROM. 
-For example, I couldn't get how to handle the property of the ROM which would have to be empty every time unless explicitely generated before the simulation.
-
-Moreover, as you've read earlier, I've decided to manually choose the size of an address and of a word (within four variables at the begining of the <code>netlist_simulator.ml</code> file). I did so because, for me, it made more sense to have a fixed address' size in the same memory unit. However, I am not so sure about the word size, one other possibility could have been to slice the value at the given address so we could get different words from the same address if given different word sizes as inputs for the expression.
+<!-- TODO -->
