@@ -21,3 +21,5 @@ Our microprocessor is build using the Minijazz netlist format (more info about i
 ## Clock
 
 The clock is initialized putting current unix time in ram separated in seconds, minutes, hours, day, month and year. Then, using a double dabble algorithm, we place the 14 values (yyyy/dd/mm hh:mm:ss) inside 14 regiters from x0 to x13. We also put in ram a value updated each time a second has passed. The main algorithm works as follow, everytime this value is set to 1, we update the global second counter and do a serie of check to update the 14 registers. To print the values, we use a 7-segment logic built in the [simulator](netlist_simulator/).
+
+The clock takes some time to initialized since it's doing a double dabble for the years, months, days, hours, minutes and seconds which takes approximately 600 cycles.

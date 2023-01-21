@@ -33,3 +33,17 @@ You can also add an option to choose if you want to print the registers at each 
 # This example will run the program ./assembler/tests/test_7seg.x during 11 simulator steps and output it as a clock
 ./run.sh -n 11 --clk ./assembler/tests/test_7seg.x
 ```
+
+## Run the clocks programs
+
+To run the digital clock in real time you can do:
+
+```sh
+./run.sh --clk ./assembler/tests/clk_real_time.x
+```
+
+For the fast-forward mode, you can do:
+
+```sh
+./run.sh --clk ./assembler/tests/clk_goes_vroom.x
+```

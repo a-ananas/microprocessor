@@ -288,10 +288,10 @@ xor  x30 x30 x30 0                  # re-init x30
 xor  x29 x29 x29 0                  # re-init x29
 xor  x28 x28 x28 0                  # re-init x28
 xor  x26 x26 x26 0                  # re-init x26
-addi x31 x31 60                     # put 60 in x31 for time modulos
-addi x30 x30 24                     # put 24 in x30 for time modulos
-addi x29 x29 31                     # put 31 in x29 for time modulos
-addi x28 x28 12                     # put 12 in x28 for time modulos
+addi x31 x31 60                     # put 60 in x31 for time modulus
+addi x30 x30 24                     # put 24 in x30 for time modulus
+addi x29 x29 31                     # put 31 in x29 for time modulus
+addi x28 x28 12                     # put 12 in x28 for time modulus
 xor x27 x27 x27 0                   # put 0 in x27 to use when needed
 addi x26 x26 10                     # put 10 in x26 to use when needed
 
