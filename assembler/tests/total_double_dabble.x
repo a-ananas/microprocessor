@@ -39,6 +39,8 @@ addi x13 x13 59
 
 YRS:
 addi x26 x3 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_YRS:
 andi x25 x26 16384
 srli x25 x25 14
@@ -88,10 +90,13 @@ srli x23 x23 4
 andi x1 x23 15
 srli x23 x23 4
 andi x0 x23 15
+srli x23 x23 4
 jal x0 MTH
 
 MTH:
 addi x26 x7 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_MTH:
 andi x25 x26 128
 srli x25 x25 7
@@ -127,6 +132,8 @@ jal  x6 DAY
 
 DAY:
 addi x26 x5 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_DAY:
 andi x25 x26 128
 srli x25 x25 7
@@ -162,6 +169,8 @@ jal  x4 HUR
 
 HUR:
 addi x26 x9 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_HUR:
 andi x25 x26 128
 srli x25 x25 7
@@ -197,6 +206,8 @@ jal  x8 MIN
 
 MIN:
 andi x26 x11 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_MIN:
 andi x25 x26 128
 srli x25 x25 7
@@ -232,6 +243,8 @@ jal  x10 SEC
 
 SEC:
 addi x26 x13 0
+slli x26 x26 1
+addi x26 x26 1
 BOUCLE_SEC:
 andi x25 x26 128
 srli x25 x25 7
@@ -252,7 +265,7 @@ bge  x23 x24 x25 TEST_TSC   # si 4 >= x
 addi x23 x23 3              # +3 aux unités
 jal  x23 TEST_TSC           
                             
-TEST_TMN:                   
+TEST_TSC:                   
 addi x24 x24 60             # 64
 andi x25 x23 240            # x
 bge  x23 x24 x25 BOUCLE_SEC # si 4 >= x
