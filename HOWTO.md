@@ -47,3 +47,5 @@ For the fast-forward mode, you can do:
 ```sh
 ./run.sh --clk ./assembler/tests/clk_goes_vroom.x
 ```
+
+Notice that the clock takes some time to initialize because of the double dabble algorithm.
