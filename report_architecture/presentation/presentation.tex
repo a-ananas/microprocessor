@@ -2,6 +2,7 @@
 \useoutertheme[subsection=false]{smoothbars}
 \usecolortheme{beaver}
 
+\usepackage{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage{graphicx}
@@ -22,7 +23,7 @@
 \makeatother
 
 \tikzstyle{memory} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
-\tikzstyle{registers} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{registers} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black]
 \tikzstyle{empty} = [rectangle, minimum width=3cm, minimum height=1cm, text centered]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
@@ -94,29 +95,104 @@
 
 	\begin{frame}
 		\frametitle{A l'initialisation}
+		\begin{figure}
+		\centering
 		\begin{tikzpicture}[node distance=2cm]
-			\node (start) [memory] {ROM};
-			\node (wsh) [registers, below of=start] {Process};
-			\node (wsh3) [empty, below of=wsh] {\dots};
-			\node (wsh2) [registers, below of=wsh3] {Process Next};
-			\node (ram) [memory, right of=wsh, xshift=2cm] {RAM};
+			\node (x14) [registers] {x14: sec};
+			\node (dot) [empty, below of=x14] {\dots};
+			\node (x19) [registers, below of=dot] {x19: yr};
+			\node (ram) [memory, right of=dot, xshift=2cm] {RAM};
+			\node (dbdb) [registers, below of=x19] {Double-Dabble};
 
-			\draw [arrow] (start) -- (wsh);
-			\draw [arrow] (wsh) -- (wsh3);
-			\draw [arrow] (ram) -- (wsh);
-			\draw [arrow] (ram) |- (wsh2);
-			\draw [arrow] (ram) |- (wsh3);
-			\draw [arrow] (wsh3) -- (wsh2);
+			\draw [arrow] (ram) |- node[anchor=south] {0x2} (x14);
+			\draw [arrow] (ram) -- node[anchor=north] {0x\(i\)} (dot);
+			\draw [arrow] (ram) |- node[anchor=north] {0x7} (x19);
+			\draw [arrow] (x19) -- (dbdb);
 		\end{tikzpicture}
+		\end{figure}
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Pendant un cycle}
-		Faire une illustration cool
+		\begin{figure}
+		\centering
+		\begin{tikzpicture}[node distance=2cm]
+			\node (x14) [registers] {x14: sec};
+			\node (dot) [empty, below of=x14] {\dots};
+			\node (x19) [registers, below of=dot] {x19: yr};
+			\node (ram) [memory, right of=x14, xshift=5cm] {RAM};
+
+			\draw [arrow] (ram) -- node[anchor=south] {0x1: si 1 : + 1} (x14);
+			\draw [arrow] (x14) -- node[anchor=east] {\emph{overflow}} (dot);
+			\draw [arrow] (dot) -- node[anchor=east] {\emph{overflow}} (x19);
+		\end{tikzpicture}
+		\end{figure}
 	\end{frame}
+
 	\begin{frame}
 		\frametitle{Double-Dabble}
-		Faire une illustration cool
+
+		\only<1>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{13}{c}{}&\multicolumn{1}{c}{15}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&0&&0&0&0&0&&1&1&1&1\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+		\only<2>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{14}{c}{}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&0&&0&0&0&1&&1&1&1&x\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+		\only<3>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{14}{c}{}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&0&&0&0&1&1&&1&1&x&x\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+		\only<4>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{8}{c}{}&\multicolumn{1}{c}{+3}&\multicolumn{4}{c}{}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&0&&0&1&1&1&&1&x&x&x\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+		\only<5>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{14}{c}{}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&0&&1&0&1&0&&1&x&x&x\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+		\only<6>
+		{\begin{center}
+			\def\arraystretch{1.5}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\multicolumn{3}{c}{}&\multicolumn{1}{c}{1}&\multicolumn{4}{c}{}&\multicolumn{1}{c}{5}&\multicolumn{4}{c}{}\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+				0&0&0&1&&0&1&0&1&&x&x&x&x\\
+				\cline{1-4} \cline{6-9} \cline{11-14}
+			\end{tabular}
+		\end{center}}
+
 	\end{frame}
 		
 \end{document}
