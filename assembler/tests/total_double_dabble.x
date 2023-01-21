@@ -44,13 +44,13 @@ addi x26 x3 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_YRS:
-andi x25 x26 4096
-srli x25 x25 12
+andi x25 x26 2048
+srli x25 x25 11
 slli x23 x23 1
 add  x23 x23 x25
 slli x26 x26 1
 
-andi x24 x26 4095
+andi x24 x26 2047
 beq  x24 x24 x21 END_YRS
 
 jal x23 TEST_UNT
