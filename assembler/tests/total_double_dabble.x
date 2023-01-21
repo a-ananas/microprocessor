@@ -90,10 +90,10 @@ srli x23 x23 4
 andi x1 x23 15
 srli x23 x23 4
 andi x0 x23 15
-srli x23 x23 4
 jal x0 MTH
 
 MTH:
+xor  x23 x23 x23
 addi x26 x7 0
 slli x26 x26 1
 addi x26 x26 1
@@ -131,6 +131,7 @@ andi x6 x23 15
 jal  x6 DAY
 
 DAY:
+xor  x23 x23 x23
 addi x26 x5 0
 slli x26 x26 1
 addi x26 x26 1
@@ -168,6 +169,7 @@ andi x4 x23 15
 jal  x4 HUR
 
 HUR:
+xor  x23 x23 x23
 addi x26 x9 0
 slli x26 x26 1
 addi x26 x26 1
@@ -205,7 +207,8 @@ andi x8 x23 15
 jal  x8 MIN
 
 MIN:
-andi x26 x11 0
+xor  x23 x23 x23
+addi x26 x11 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_MIN:
@@ -242,6 +245,7 @@ andi x10 x23 15
 jal  x10 SEC
 
 SEC:
+xor  x23 x23 x23
 addi x26 x13 0
 slli x26 x26 1
 addi x26 x26 1
