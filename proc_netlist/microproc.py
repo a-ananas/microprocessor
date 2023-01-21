@@ -35,7 +35,7 @@ def microproc() -> None:
 
     alu_out: Variable = alu.alu(opcode, i1, i2)
     
-    ram_out: Variable = ram.ram(alu_out, wenableRam, i2)
+    ram_out: Variable = ram.ram(alu_out, wenableRam, Reg(i2))
 
     rdi_out: Variable = rdi.next_instr(Reg(Defer(const.REG_SIZE, lambda: rdi_out)), opcode, alu_out, imm)
 

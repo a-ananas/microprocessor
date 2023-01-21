@@ -19,6 +19,9 @@
 /* manage the end of file */
 %token EOF
 
+%nonassoc REG 
+%nonassoc LABEL
+
 %start file
 
 %type <Ast.file> file
@@ -31,7 +34,9 @@ file:
 
 instr:
   /* we take the first register as inputs and the last is the destination */
-  | opc = opr rd = REG rs1 = REG rs2 = REG {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd))}
+  | opc = opr rd = REG rs1 = REG rs2 = REG {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd, None))}
+  | opc = opr rd = REG rs1 = REG rs2 = REG imm = IMM  {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd, Some(Imm(imm))))}
+  | opc = opr rd = REG rs1 = REG rs2 = REG lab = LABEL {addr_counter := !addr_counter + 1 ; Instr(R(opc, rs1, rs2, rd, Some(Label(lab, !addr_counter))))}
   | opc = opi rd = REG rs = REG imm = IMM {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Imm(imm), rd))}
   | opc = opi rd = REG rs = REG lab = LABEL {addr_counter := !addr_counter + 1 ; Instr(I(opc, rs, Label(lab, !addr_counter), rd))}
   | opc = opu rd = REG imm = IMM {addr_counter := !addr_counter + 1 ; Instr(U(opc, Imm(imm), rd))}

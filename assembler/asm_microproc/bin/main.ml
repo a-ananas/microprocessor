@@ -56,8 +56,12 @@ let () =
           (* WARNING : need to fill the immediates at some point with enough zeros *)
           let rec ast_to_string = function
             | [] -> close_out oc
-            | Ast.Instr(R(Opc(sopc), rs1, rs2, rd))::ist ->
+            | Ast.Instr(R(Opc(sopc), rs1, rs2, rd, None))::ist ->
                 Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (String.make 12 '0') ; ast_to_string ist
+            | Ast.Instr(R(Opc(sopc), rs1, rs2, rd, Some(Imm(imm))))::ist ->
+                Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (Lexer.int_to_binary imm 12) ; ast_to_string ist
+            | Ast.Instr(R(Opc(sopc), rs1, rs2, rd, Some(Label(lab, instr_ofs))))::ist ->
+                Printf.fprintf oc "%s%s%s%s%s\n" sopc rd rs1 rs2 (Lexer.int_to_binary (find_offset_diff !ref_list lab instr_ofs) 12) ; ast_to_string ist
             | Ast.Instr(I(Opc(sopc), rs, Imm(imm), rd))::ist ->
                 Printf.fprintf oc "%s%s%s%s\n" sopc rd rs (Lexer.int_to_binary imm 17) ; ast_to_string ist 
             | Ast.Instr(I(Opc(sopc), rs, Label(lab, instr_ofs), rd))::ist -> 
@@ -84,4 +88,3 @@ let () =
   | e ->
       Format.eprintf "\tAnomalie : %s\n" (Printexc.to_string e);
       exit 2
-

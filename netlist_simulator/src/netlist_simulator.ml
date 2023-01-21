@@ -4,6 +4,9 @@ open Format;;
 (* the option to only show the running program *)
 let print_only = ref false
 
+(* the option to show steps as the clock format *)
+let clk_format = ref false
+
 (* the option to specify the number of cycle on wich run the program *)
 let number_steps = ref (-1)
 
@@ -11,7 +14,7 @@ let number_steps = ref (-1)
 let rom_init_file = ref ""
 
 (* the current unix time *)
-let unix_time = ref (Unix.time())
+let unix_time = ref 0.
 
 (* the standard output for format printer *)
 let fStdout = (formatter_of_out_channel stdout)
@@ -34,15 +37,25 @@ let ramAddrSize = 16;;
 let ramWordSize = 32;;
 
 (* ram special addresses *)
-(* 
-let ramAddrSec  = "1001111111111111"
-let ramAddrMin  = "0101111111111111"
-let ramAddrHour = "1101111111111111"
-let ramAddrDay  = "0011111111111111"
-let ramAddrMon  = "1011111111111111"
-let ramAddrYear = "0111111111111111"
-let ramAddrUpdt = "1111111111111111" 
-*)
+let ramAddrCounter = "0000000000000000";;
+let ramAddrUpdt    = "1000000000000000";;
+let ramAddrSec     = "0100000000000000";;
+let ramAddrMin     = "1100000000000000";;
+let ramAddrHrs     = "0010000000000000";;
+let ramAddrDay     = "1010000000000000";;
+let ramAddrMth     = "0110000000000000";;
+let ramAddrYrs     = "1110000000000000";;
+
+(* registers list of ids *)
+let regList = ["x0";"x1";"x2";"x3";"x4";"x5";"x6";"x7";"x8";
+              "x9";"x10";"x11";"x12";"x13";"x14";"x15";"x16";"x17";"x18";
+              "x19";"x20";"x21";"x22";"x23";"x24";"x25";"x26";"x27";"x28";
+              "x29";"x30";"x31"];;
+
+(* registers used as output for tge digital clock *)
+let regListClk = ["x0";"x1";"x2";"x3";"x4";"x5";"x6";"x7";"x8";
+                  "x9";"x10";"x11";"x12";"x13"]
+
 
 
 (* return the Value of an argument *)
@@ -80,6 +93,207 @@ let valueToAddress v addrSize =
 (* get an address from an arg *)
 let argToAddress arg addrSize env =
   let value = calculArg arg env in (valueToAddress value addrSize)
+;;
+
+(* transform an int in base 10 into a VBitArray *)
+let intToVBitArray vint length =
+  let nth_bit x n = x land (1 lsl n) <> 0 in
+  let bitarray length x = Array.init length (nth_bit x) in
+    (VBitArray (bitarray length vint))
+;;
+
+(* transform a float into a VBitArray *)
+let floatToVBitArray vfloat length =
+  let vint = Stdlib.int_of_float vfloat in
+    (intToVBitArray vint length)
+;;
+
+(* raise an integer n to the power of a *)
+let rec pow a = function
+  | 0 -> 1
+  | 1 -> a
+  | n -> 
+    let b = pow a (n / 2) in
+    b * b * (if n mod 2 = 0 then 1 else a)
+;;
+
+
+(* cast an integer into a binary string *)
+let intToBinString x len =
+  let rec d2b y res = match y with 
+    | 0 -> res
+    | _ -> let tmp = if ((y mod 2) = 1) then "1" else "0" in 
+      (d2b (y/2) (res^tmp))
+  in
+  let bin = (d2b x "") in
+  let deltaSize = len - (String.length bin) in
+  let deltaStr = String.make deltaSize '0' in bin^deltaStr
+;;
+
+
+(* cast a VBitArray into an integer *)
+let vBitArrayToInt vbit =
+  let len = Array.length vbit in
+  let rec aux index res =
+    match index with
+    | i when i>= len -> res
+    | _ -> 
+      let res = 
+        if (Array.get vbit index) 
+          then res + (pow 2 index) else res
+        in (aux (index+1) res)
+  in (aux 0 0)
+;;
+
+
+(* cast a value into an integer *)
+let valueToInt v = 
+  match v with
+  | VBit b -> if b then 1 else 0
+  | VBitArray arr -> (vBitArrayToInt arr)
+;;
+
+(* cast a char to a boolean *)
+let charToBool c =
+  match c with
+  | '0' -> false
+  | '1' -> true
+  | _ -> raise (SystemError "Unexpecter character!\n")
+;;
+
+(* cast a string to a boolean array *)
+let stringToArray s len =
+  let arr = Array.make len false in
+  let rec aux len =
+    match len with 
+    | 0 -> arr 
+    | i -> 
+      begin
+        arr.(i-1) <- (charToBool s.[i-1]);
+        (aux (len-1))
+      end
+  in (aux len)
+;;
+
+(* cast a string to a Value *)
+let stringToValue s = 
+  let len = (String.length s) in
+    match len with
+    | 1 -> let b = charToBool s.[0] in VBit(b)
+    | l when (l > 1) -> let arr = (stringToArray s l) in VBitArray(arr)
+    | _ -> raise (SystemError "Invalid user input!\n")
+;;
+
+(* print the given time *)
+let print_time time out =
+  (* fprintf out "cur_unix_time: %f\n" time; *)
+  let tm = Unix.gmtime time in
+    begin
+      let _ = ignore(Sys.command "clear") in ();
+      fprintf out "@.";
+      fprintf out "\r%02d/%02d/%04d, %02d:%02d:%02d" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec;
+    end
+;;
+
+(* 7-segment *)
+(* ##### *)
+(* # A # *)
+(* #FGB# *)
+(* #EDC# *)
+(* ##### *)
+(* return the string value for the A segment given 4 bits *)
+let get7SegA a b c d =
+  let res = ((not b) && (not d)) || c || (b && d) || a in
+    if res then "_" else " "
+;; 
+
+(* return the string value for the B segment given 4 bits *)
+let get7SegB a b c d =
+  let res = (not b) || ((not c) && (not d)) || (c && d) in
+    if res then "|" else " "
+;;
+
+(* return the string value for the C segment given 4 bits *)
+let get7SegC a b c d =
+  let res = (not c) || d || b in
+    if res then "|" else " "
+;;
+
+(* return the string value for the D segment given 4 bits *)
+let get7SegD a b c d =
+  let res = ((not b) && (not d)) || ((not b) && c) || (b && (not c) && d) || (c && (not d)) || a in
+    if res then "_" else " "
+;;
+
+(* return the string value for the E segment given 4 bits *)
+let get7SegE a b c d =
+  let res = ((not b) && (not d)) || (c && (not d)) in
+    if res then "|" else " "
+;;
+
+(* return the string value for the F segment given 4 bits *)
+let get7SegF a b c d =
+  let res = ((not c) && (not d)) || (b && (not c)) || (b && (not d)) || a in
+    if res then "|" else " "
+;;
+
+(* return the string value for the G segment given 4 bits *)
+let get7SegG a b c d =
+  let res = ((not b) && c) || (b && (not c)) || a || (b && (not d)) in
+    if res then "_" else " "
+;;
+
+(* get the top zone of a 7-segment *)
+let get7SegTop a b c d =
+  " " ^ (get7SegA a b c d) ^ " "
+;;
+
+(* get the middle zone of a 7-segment *)
+let get7SegMid a b c d =
+  (get7SegF a b c d) ^ (get7SegG a b c d) ^ (get7SegB a b c d)
+;;
+
+(* get the bottom zone of a 7-segment *)
+let get7SegBot a b c d =
+  (get7SegE a b c d) ^ (get7SegD a b c d) ^ (get7SegC a b c d)
+;;
+
+(* print format yyyy/dd/mm hh:mm:ss in 7-segment from a list of 4-tuple bits *)
+let printClkFormat vlist out = 
+  let rec aux vlist res = 
+    match vlist with 
+    | [] -> res
+    | (a,b,c,d)::vlist -> 
+      let top,mid,bot = res in
+        let top = ((get7SegTop a b c d)^top) in
+        let mid = ((get7SegMid a b c d)^mid) in
+        let bot = ((get7SegBot a b c d)^bot) in
+          (aux vlist (top,mid,bot))
+  in
+    let top,mid,bot = (aux vlist ("","","")) in
+    let top = (String.sub top 0 12)^"    "^
+              (String.sub top 12 6)^"    "^
+              (String.sub top 18 6)^"   "^
+              (String.sub top 24 6)^"   "^
+              (String.sub top 30 6)^"   "^
+              (String.sub top 36 6) in
+    let mid = (String.sub mid 0 12)^"  / "^
+              (String.sub mid 12 6)^"  / "^
+              (String.sub mid 18 6)^"   "^
+              (String.sub mid 24 6)^" : "^
+              (String.sub mid 30 6)^" : "^
+              (String.sub mid 36 6) in
+    let bot = (String.sub bot 0 12)^" /  "^
+              (String.sub bot 12 6)^" /  "^
+              (String.sub bot 18 6)^"   "^
+              (String.sub bot 24 6)^" : "^
+              (String.sub bot 30 6)^" : "^
+              (String.sub bot 36 6) in
+      begin
+        let _ = ignore(Sys.command "clear") in ();
+        fprintf out "@.";
+        fprintf out "\r%s\n%s\n%s" top mid bot
+      end
 ;;
 
 
@@ -300,8 +514,8 @@ let doEq eq env prevEnv envROM envRAM prevEnvRAM =
       let newEnv = Env.add ident value env in (newEnv, prevEnv, newEnvRAM, prevEnvRAM)
 ;;
 
-(* print the results *)
-let showResults program env =
+(* print the results in the clock format *)
+let showResultsClk program env =
   let outputs = program.p_outputs in
   begin
     let rec aux outs =
@@ -310,10 +524,34 @@ let showResults program env =
       | out::outs ->
         begin
           let value = Env.find out env in
-              fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value;
+          fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out]
+          Netlist_printer.print_value value;
           aux outs
-        end
+        end 
     in (aux outputs)
+  end 
+;;
+
+(* print the results *)
+let showResults program env step =
+  begin
+    if step >= 0 
+      then fprintf fStdout "Step %d:\n" step
+      else ();
+    let outputs = program.p_outputs in
+    begin
+      let rec aux outs =
+        match outs with
+        | [] -> ()
+        | out::outs ->
+          begin
+            let value = Env.find out env in
+                (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
+                fprintf fStdout "=> %s = %d@." out (valueToInt value);
+            aux outs
+          end
+      in (aux outputs)
+    end
   end
 ;;
 
@@ -329,37 +567,6 @@ let checkInput input =
         | i -> if (not (charCorrect input.[i-1])) then false
                 else (aux (len-1))
       in (aux len)
-;;
-
-(* cast a char to a boolean *)
-let charToBool c =
-  match c with
-  | '0' -> false
-  | '1' -> true
-  | _ -> raise (SystemError "Unexpecter character!\n")
-;;
-
-(* cast a string to a boolean array *)
-let stringToArray s len =
-  let arr = Array.make len false in
-  let rec aux len =
-    match len with 
-    | 0 -> arr 
-    | i -> 
-      begin
-        arr.(i-1) <- (charToBool s.[i-1]);
-        (aux (len-1))
-      end
-  in (aux len)
-;;
-
-(* cast a string to a Value *)
-let stringToValue s = 
-  let len = (String.length s) in
-    match len with
-    | 1 -> let b = charToBool s.[0] in VBit(b)
-    | l when (l > 1) -> let arr = (stringToArray s l) in VBitArray(arr)
-    | _ -> raise (SystemError "Invalid user input!\n")
 ;;
 
 
@@ -417,28 +624,6 @@ let catchException exc =
     | _ -> raise exc
 ;;
 
-(* raise an integer n to the power of a *)
-let rec pow a = function
-  | 0 -> 1
-  | 1 -> a
-  | n -> 
-    let b = pow a (n / 2) in
-    b * b * (if n mod 2 = 0 then 1 else a)
-;;
-
-
-(* cast an integer into a binary string *)
-let intToBinString x len =
-  let rec d2b y res = match y with 
-    | 0 -> res
-    | _ -> let tmp = if ((y mod 2) = 1) then "1" else "0" in 
-      (d2b (y/2) (res^tmp))
-  in
-  let bin = (d2b x "") in
-  let deltaSize = len - (String.length bin) in
-  let deltaStr = String.make deltaSize '0' in bin^deltaStr
-;;
-
 
 (* init an empty memory *)
 let initMemEmpty addrSize wordSize = 
@@ -458,10 +643,54 @@ let initMemEmpty addrSize wordSize =
     in (forAllAddresses 0 env)
 ;;
 
+
+(* update unix time in ram *)
+let updateUnixTime ram =
+  let cur_time = Unix.time() in
+  if (cur_time -. !unix_time >= 1.)
+    then 
+      begin
+        unix_time := cur_time;
+        (* let ram = (Env.add ramAddrCounter (floatToVBitArray !unix_time ramWordSize) ram) in *)
+          let new_val = (Array.make ramWordSize false) in
+            begin
+              (Array.set new_val 0 true);
+              (Env.add ramAddrUpdt (VBitArray(new_val)) ram)
+            end
+      end
+    else ram
+;;
+
+(* init the RAM special addresses *)
+let initRAMSpecialAddr time ram wordSize =
+  let tm = Unix.gmtime time in
+  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour, tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900 in
+  (* fprintf fStdout "%d, %d, %d, %d, %d, %d\n@." sec min hrs day mth yrs; *)
+  (* global second counter *)
+  let ram = (Env.add ramAddrCounter (floatToVBitArray time wordSize) ram) in
+  (* seconds *)
+  let ram = (Env.add ramAddrSec (intToVBitArray sec wordSize) ram) in
+  (* minutes *)
+  let ram = (Env.add ramAddrMin (intToVBitArray min wordSize) ram) in
+  (* hours *)
+  let ram = (Env.add ramAddrHrs (intToVBitArray hrs wordSize) ram) in
+  (* days *)
+  let ram = (Env.add ramAddrDay (intToVBitArray day wordSize) ram) in
+  (* months *)
+  let ram = (Env.add ramAddrMth (intToVBitArray mth wordSize) ram) in
+  (* years *)
+  let ram = (Env.add ramAddrYrs (intToVBitArray yrs wordSize) ram) in 
+    ram
+;;
+
+
 (* init the RAM *)
 let initRAM addrSize wordSize =
   (* RAM is initiate empy *)
-  (initMemEmpty addrSize wordSize)
+  let ram = (initMemEmpty addrSize wordSize) in
+    (* adding unix time in the special address *)
+    unix_time := Unix.time();
+    (initRAMSpecialAddr (!unix_time) ram wordSize)
 ;;
 
 (* extends a string to a given size by adding zeros at the end *)
@@ -542,14 +771,6 @@ let initROM addrSize wordSize =
 ;;
 
 
-(* print the current time *)
-let print_time out =
-  fprintf out "cur_unix_time: %f\n" !unix_time;
-  let tm = Unix.gmtime !unix_time in
-    fprintf out "%d/%d/%d, %d:%d:%d\n\n" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec
-;;
-
-
 (* simulate a netlist *)
 let simulator program number_steps = 
   (* Netlist.print_program stdout program; *)
@@ -568,13 +789,15 @@ let simulator program number_steps =
         then 
           begin
             fprintf fStdout "\n\nDone, final output:\n";
-            (showResults program env)
+            if !clk_format 
+              then (showResultsClk program env)
+              else (showResults program env (-1));
+            fprintf fStdout "\n"
           end
       else
         begin
-          fprintf fStdout "Step %d:\n" (number_steps - (numSteps-1));
-          (* temporary *)
-          (* print_time fStdout; *)
+          (* update time *)
+          let envRAM = updateUnixTime envRAM in
           (* ask for inputs *)
           let env = askForInputs program.p_inputs env in
             (* for eq in equations *)
@@ -590,8 +813,10 @@ let simulator program number_steps =
               in
                 let (env, envRAM) = (forEqs eqs env env envRAM envRAM) 
             in 
-              begin 
-                (showResults program env);
+              begin
+                if !clk_format 
+                  then (showResultsClk program env)
+                  else (showResults program env (number_steps - (numSteps-1)));
                 (forNbStep (numSteps-1) env envRAM)
               end
           end
@@ -622,6 +847,7 @@ let main () =
     [
       "-n", Arg.Set_int number_steps, "Number of steps to simulate";
       "--print", Arg.Set print_only, "Only prints the program";
+      "--clk", Arg.Set clk_format, "Print steps in 7-segments when running a clock";
       "-rom", Arg.Set_string rom_init_file, "The file used to initiate the ROM"
     ]
     compile

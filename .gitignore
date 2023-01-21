@@ -5,7 +5,7 @@
 *.fdb_latexmk
 *.gz
 
-proc_netlist/main.py
+# proc_netlist/main.py
 
 # ocamlbuild working directory
 _build/

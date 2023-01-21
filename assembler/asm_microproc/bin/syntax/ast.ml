@@ -3,7 +3,7 @@ type file = File of instr list
 and instr = Instr of instr_type
 
 and instr_type = 
-  | R of opcode*reg*reg*reg
+  | R of opcode*reg*reg*reg*jmp option
   | I of opcode*reg*jmp*reg
   | U of opcode*jmp*reg
   | Lab_def of lab
