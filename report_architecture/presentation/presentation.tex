@@ -6,6 +6,8 @@
 \usepackage[french]{babel}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
 
 \definecolor{links}{HTML}{F0132D}
 
@@ -18,6 +20,10 @@
 \makeatletter
 \newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 \title{Horloge numérique}
 \subtitle{Systèmes numériques}
@@ -84,8 +90,23 @@
 	\end{frame}
 
 	\section{Le simulateur de netlist}
-	\begin{frame}
 
+	\begin{frame}
+		\frametitle{A l'initialisation}
+		\begin{tikzpicture}[node distance=2cm]
+			\node (start) [startstop] {Start};
+			\node (wsh) [process, below of=start] {Process};
+			\node (wsh2) [process, below of=wsh] {Process Next};
+		\end{tikzpicture}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Pendant un cycle}
+		Faire une illustration cool
+	\end{frame}
+	\begin{frame}
+		\frametitle{Double-Dabble}
+		Faire une illustration cool
 	\end{frame}
 		
 \end{document}
