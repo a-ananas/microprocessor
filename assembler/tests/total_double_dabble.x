@@ -1,46 +1,46 @@
 # x0 -> milliers des années
 # x1 -> centaines des années
 # x2 -> dizaines des années
-# x3 -> unités des années
+# x19 -> unités des années
 # 
 # x4 -> dizaines du jour
-# x5 -> unités du jour
+# x17 -> unités du jour
 # 
 # x6 -> dizaines du mois
-# x7 -> unités du mois
+# x18 -> unités du mois
 # 
 # x8 -> dizaines des heures
-# x9 -> unités des heures
+# x16 -> unités des heures
 # 
 # x10 -> dizaines des minutes
-# x11 -> unités des minutes
+# x15 -> unités des minutes
 # 
 # x12 -> dizaines des secondes
-# x13 -> unités des secondes
+# x14 -> unités des secondes
 
-# input années dans x3
-# input mois dans x5
-# input jours dans x7
-# input heures dans x9
-# input minutes dans x11
-# input secondes dans x13
-xor  x3 x3 x3
-xor  x5 x5 x5
-xor  x7 x7 x7
-xor  x9 x9 x9
-xor  x11 x11 x11
-xor  x13 x13 x13
+# input années dans x19
+# input mois dans x17
+# input jours dans x18
+# input heures dans x16
+# input minutes dans x15
+# input secondes dans x14
+xor  x19 x19 x19
+xor  x17 x17 x17
+xor  x18 x18 x18
+xor  x16 x16 x16
+xor  x15 x15 x15
+xor  x14 x14 x14
 xor  x21 x21 x21
-addi x3 x3 2023
-addi x7 x7 12
-addi x5 x5 31
-addi x9 x9 13
-addi x11 x11 59
-addi x13 x13 59
+addi x19 x19 2023
+addi x18 x18 12
+addi x17 x17 31
+addi x16 x16 13
+addi x15 x15 59
+addi x14 x14 59
 
 
 YRS:
-addi x26 x3 0
+addi x26 x19 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_YRS:
@@ -85,18 +85,12 @@ addi x23 x23 12304          # +3 aux milliers
 jal  x23 BOUCLE_YRS
 
 END_YRS:
-andi x3 x23 15
-srli x23 x23 4
-andi x2 x23 15
-srli x23 x23 4
-andi x1 x23 15
-srli x23 x23 4
-andi x0 x23 15
+addi x27 x23 0
 jal x0 MTH
 
 MTH:
 xor  x23 x23 x23
-addi x26 x7 0
+addi x26 x18 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_MTH:
@@ -127,14 +121,12 @@ addi x23 x23 48             # +3 aux dizaines
 jal  x23 BOUCLE_MTH           
 
 END_MTH:
-andi x7 x23 15
-srli x23 x23 4
-andi x6 x23 15
+addi x28 x23 0
 jal  x6 DAY
 
 DAY:
 xor  x23 x23 x23
-addi x26 x5 0
+addi x26 x17 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_DAY:
@@ -165,14 +157,12 @@ addi x23 x23 48             # +3 aux dizaines
 jal  x23 BOUCLE_DAY           
 
 END_DAY:
-andi x5 x23 15
-srli x23 x23 4
-andi x4 x23 15
+addi x29 x23 0
 jal  x4 HUR
 
 HUR:
 xor  x23 x23 x23
-addi x26 x9 0
+addi x26 x16 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_HUR:
@@ -203,14 +193,12 @@ addi x23 x23 48             # +3 aux dizaines
 jal  x23 BOUCLE_HUR           
 
 END_HUR:
-andi x9 x23 15
-srli x23 x23 4
-andi x8 x23 15
+addi x30 x23 0
 jal  x8 MIN
 
 MIN:
 xor  x23 x23 x23
-addi x26 x11 0
+addi x26 x15 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_MIN:
@@ -241,14 +229,12 @@ addi x23 x23 48             # +3 aux dizaines
 jal  x23 BOUCLE_MIN           
 
 END_MIN:
-andi x11 x23 15
-srli x23 x23 4
-andi x10 x23 15
+addi x31 x23 0
 jal  x10 SEC
 
 SEC:
 xor  x23 x23 x23
-addi x26 x13 0
+addi x26 x14 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_SEC:
@@ -279,11 +265,44 @@ addi x23 x23 48             # +3 aux dizaines
 jal  x23 BOUCLE_SEC           
 
 END_SEC:
-andi x13 x23 15
-srli x23 x23 4
-andi x12 x23 15
 jal  x12 END
 
 END:
+# SEC
+andi x13 x23 15
+srli x23 x23 4
+andi x12 x23 15
+
+# MIN
+andi x11 x31 15
+srli x31 x31 4
+andi x10 x31 15
+
+# HOUR
+andi x9 x30 15
+srli x30 x30 4
+andi x8 x30 15
+
+# MONTH
+andi x7 x28 15
+srli x28 x28 4
+andi x6 x28 15
+
+# DAY
+andi x5 x29 15
+srli x29 x29 4
+andi x4 x29 15
+
+#YEAR
+andi x3 x27 15
+srli x27 x27 4
+andi x2 x27 15
+srli x27 x27 4
+andi x1 x27 15
+srli x27 x27 4
+andi x0 x27 15
+
+jal x0 SUCCESS_LOOP
+
+SUCCESS_LOOP:
 addi x0 x0 0
-jal x0 END
