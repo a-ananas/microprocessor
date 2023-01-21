@@ -32,7 +32,7 @@ xor  x11 x11 x11
 xor  x13 x13 x13
 xor  x21 x21 x21
 addi x3 x3 2023
-addi x7 x7 1
+addi x7 x7 12
 addi x5 x5 21
 addi x9 x9 13
 addi x11 x11 59
@@ -100,13 +100,13 @@ addi x26 x7 0
 slli x26 x26 1
 addi x26 x26 1
 BOUCLE_MTH:
-andi x25 x26 128
-srli x25 x25 7
+andi x25 x26 32
+srli x25 x25 5
 slli x23 x23 1
 add  x23 x23 x25
 slli x26 x26 1
 
-andi x24 x26 127
+andi x24 x26 31
 beq  x24 x24 x21 END_MTH
 
 jal x23 TEST_UMH
