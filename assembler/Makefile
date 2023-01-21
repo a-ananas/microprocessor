@@ -1,8 +1,8 @@
 BIN_FOLDER := asm_microproc/bin
 SYNTAX_FOLDER := $(BIN_FOLDER)/syntax
 TESTS_FOLDER := tests
-TEST_FILE := test.x
-TEST_OUTPUT := test.i
+TEST_FILE := double_dabble.x
+TEST_OUTPUT := double_dabble.i
 TARGET := main.exe
 EXEC := asm
 PYTHON_SCRIPT := format_output.py

@@ -518,29 +518,18 @@ let doEq eq env prevEnv envROM envRAM prevEnvRAM =
 let showResultsClk program env =
   let outputs = program.p_outputs in
   begin
-    let rec aux outs res =
+    let rec aux outs =
       match outs with
-      | [] -> res
+      | [] -> ()
       | out::outs ->
-        if List.mem out regListClk
-          then
-            begin
-              let value = Env.find out env in
-                match value with 
-                  | VBitArray arr ->
-                    (* fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out] Netlist_printer.print_value value; *)
-                    let a,b,c,d = (Array.get arr 3), (Array.get arr 2), (Array.get arr 1), (Array.get arr 0) in
-                    (* let time = Float.of_int (valueToInt value) in *)
-                      (* print_time time fStdout; *)
-                    (* fprintf fStdout "=> %s = %d@." out (valueToInt value); *)
-                      (aux outs ((a,b,c,d)::res))
-                  | _ -> failwith "register must be of size 32"
-            end
-          else aux outs res
-    in 
-      let values = (aux outputs []) in 
-        (printClkFormat values fStdout)
-  end
+        begin
+          let value = Env.find out env in
+          fprintf fStdout "=> %a = %a@." Netlist_printer.print_idents [out]
+          Netlist_printer.print_value value;
+          aux outs
+        end 
+    in (aux outputs)
+  end 
 ;;
 
 (* print the results *)
