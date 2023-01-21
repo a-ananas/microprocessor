@@ -21,8 +21,9 @@
 \newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
 
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{memory} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{registers} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{empty} = [rectangle, minimum width=3cm, minimum height=1cm, text centered]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
 \title{Horloge numérique}
@@ -94,9 +95,18 @@
 	\begin{frame}
 		\frametitle{A l'initialisation}
 		\begin{tikzpicture}[node distance=2cm]
-			\node (start) [startstop] {Start};
-			\node (wsh) [process, below of=start] {Process};
-			\node (wsh2) [process, below of=wsh] {Process Next};
+			\node (start) [memory] {ROM};
+			\node (wsh) [registers, below of=start] {Process};
+			\node (wsh3) [empty, below of=wsh] {\dots};
+			\node (wsh2) [registers, below of=wsh3] {Process Next};
+			\node (ram) [memory, right of=wsh, xshift=2cm] {RAM};
+
+			\draw [arrow] (start) -- (wsh);
+			\draw [arrow] (wsh) -- (wsh3);
+			\draw [arrow] (ram) -- (wsh);
+			\draw [arrow] (ram) |- (wsh2);
+			\draw [arrow] (ram) |- (wsh3);
+			\draw [arrow] (wsh3) -- (wsh2);
 		\end{tikzpicture}
 	\end{frame}
 
