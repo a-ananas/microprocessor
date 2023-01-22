@@ -290,9 +290,9 @@ let printClkFormat vlist out =
               (String.sub bot 30 6)^" : "^
               (String.sub bot 36 6) in
       begin
-        let _ = ignore(Sys.command "clear") in ();
+        (* let _ = ignore(Sys.command "clear") in (); *)
         fprintf out "@.";
-        fprintf out "\r%s\n%s\n%s" top mid bot
+        fprintf out "%c[2J%c[H%s\n%s\n%s" (Char.chr 27) (Char.chr 27) top mid bot
       end
 ;;
 
