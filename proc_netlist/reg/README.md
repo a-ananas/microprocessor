@@ -1,5 +1,6 @@
 # Registers for the microprocessor
 
+
 ## Descritpion
 
 List of registers: Variable("x0", REG_SIZE), Variable("x1", REG_SIZE), ..., Variable("x1", REG_SIZE)
@@ -14,6 +15,8 @@ between the value from the [ALU](../alu) and the value from the [RAM](../ram) us
 the instruction opcode as the multiplexor selector. 
 
 Lasty, `reg` return 2 variable, `i1` (the value read inside the register of address `rs1`) and `i2`. `i2` can get two possible values, if the instruction is of type `I` then `i2` is the immediate given as a parameter for the `get` function, otherwise, `i2` is the value read inside the register of address `rs2`.
+
+---
 
 ## Schematic
 

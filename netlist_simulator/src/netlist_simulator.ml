@@ -191,7 +191,7 @@ let print_time time out =
     begin
       let _ = ignore(Sys.command "clear") in ();
       fprintf out "@.";
-      fprintf out "\r%02d/%02d/%04d, %02d:%02d:%02d" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) tm.tm_hour tm.tm_min tm.tm_sec;
+      fprintf out "\r%02d/%02d/%04d, %02d:%02d:%02d" (tm.tm_mon+1) tm.tm_mday (tm.tm_year+1900) (tm.tm_hour+1) tm.tm_min tm.tm_sec;
     end
 ;;
 
@@ -675,7 +675,7 @@ let updateUnixTime ram =
 (* init the RAM special addresses *)
 let initRAMSpecialAddr time ram wordSize =
   let tm = Unix.gmtime time in
-  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour, tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900 in
+  let sec,min,hrs,day,mth,yrs = tm.tm_sec, tm.tm_min, tm.tm_hour+1, tm.tm_mday, tm.tm_mon+1, tm.tm_year+1900 in
   (* fprintf fStdout "%d, %d, %d, %d, %d, %d\n@." sec min hrs day mth yrs; *)
   (* global second counter *)
   let ram = (Env.add ramAddrCounter (floatToVBitArray time wordSize) ram) in

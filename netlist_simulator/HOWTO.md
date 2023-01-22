@@ -31,7 +31,7 @@ make simulator
 
 # USAGE
 
-To try the simulater you give it a ```.net``` file as an argument.
+To try the simulater you give it a `.net` file as an argument.
 ```sh
 # build the simulator
 make simulator
@@ -39,8 +39,8 @@ make simulator
 ./bin/netlist_simulator.byte test/fulladder.net
 ```
 
-You can also fix the number of steps for the simulation by adding the ```-n nbSteps``` option 
-or show the running netlist with the ```--print``` option.
+You can also fix the number of steps for the simulation by adding the `-n nbSteps` option 
+or show the running netlist with the `--print` option.
 ```sh
 # run the simulator on a test file for 10 steps
 ./bin/netlist_simulator.byte -n 10 test/fulladder.net
@@ -49,8 +49,16 @@ or show the running netlist with the ```--print``` option.
 ./bin/netlist_simulator.byte --print test/fulladder.net
 ```
 
-To initialize the ROM given an input files you have to add another otptional argument ```-rom file```
+To initialize the ROM given an input files you have to add another otptional argument `-rom file`
 ```sh
 # initialize the rom inside the simulator using the given file and run the simulator on the test file
 ./bin/netlist_simulator.byte -rom init_rom.i test/fulladder.net
+```
+
+To print the result using 7 segments build with the 14 first registers, you can use the option `--clk`
+```sh
+# initialize the rom inside the simulator using the given file 
+# and run the simulator on the test file while outputting the result 
+# in a clock format using values in registers from x0 to x13
+./bin/netlist_simulator.byte --clk -rom init_rom.i test/fulladder.net
 ```

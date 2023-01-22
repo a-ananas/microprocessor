@@ -48,13 +48,65 @@ Behavior for memories:
 
 </ul>
 
-
-## DIFFICULTIES
-
-
 ---
 
-It took me some time to understand properly how to manage the RAM and the ROM. 
-For example, I couldn't get how to handle the property of the ROM which would have to be empty every time unless explicitely generated before the simulation.
+## CLOCK
 
-Moreover, as you've read earlier, I've decided to manually choose the size of an address and of a word (within four variables at the begining of the <code>netlist_simulator.ml</code> file). I did so because, for me, it made more sense to have a fixed address' size in the same memory unit. However, I am not so sure about the word size, one other possibility could have been to slice the value at the given address so we could get different words from the same address if given different word sizes as inputs for the expression.
+To represent the clock we use 14 7-segments: $$y_1y_2y_3y_4/d_1d_2/mth_1mth_2 \text{ } \text{ } \text{ } h_1h_2:m_1m_2:s_1s_2$$
+These 7-segments are build using the 4 first bits of registers from x0 to x13 in that order:
+
+$$
+x0 = y_1
+$$
+
+$$
+x1 = y_2
+$$
+
+$$
+x2 = y_3
+$$
+
+$$
+x3 = y_4
+$$
+
+$$
+x4 = d_1
+$$
+
+$$
+x5 = d_2
+$$
+
+$$
+x6 = mth_1
+$$
+
+$$
+x7 = mth_2
+$$
+
+$$
+x8 = h_1
+$$
+
+$$
+x9 = h_2
+$$
+
+$$
+x10 = m_1
+$$
+
+$$
+x11 = m_2
+$$
+
+$$
+x12 = s_1
+$$
+
+$$
+x13 = s_2
+$$

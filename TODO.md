@@ -2,29 +2,39 @@
 
 ## REPORT
 
-- [ ] Correct report (instruction number / format)
+- [x] Correct report (instruction number / format)
 - [ ] Add huge schema of the entire microproc archithecture using small blocks + links to readme for every blocks
 
+---
 
 ## PROCESSOR
 
-- [x] create atomic blocks (carotte functions, cf carotte/tutorials) that we'll probably use later
+- [x] Create atomic blocks (carotte functions, cf carotte/tutorials) that we'll probably use later
 
-- [x] desgin the ALU (on paper)
+- [x] Desgin the ALU (on paper)
 
-- [x] implement the ALU (as a huge block using carotte)
+- [x] Implement the ALU (as a huge block using carotte)
 
-- [x] reproduce the proc made in class
+- [x] Reproduce the proc made in class
 
-- [x] design the full microproc
+- [x] Design the full microproc
 
-- [ ] implement instruction decoder
+- [x] Implement instruction decoder
 
+---
 
 ## SIMULATOR
 
-- [x] pick one of our simulator and add it to the repo
+- [x] Pick one of our simulator and add it to the repo
+
+- [x] Split the ROM into blocks of byte
+
+- [ ] Split the RAM into blocks of byte
+
+---
 
 ## GLOBAL
 
-- [ ] Make the assembly clock
+- [x] Make the assembly clock
+
+- [x] Make the double dabble logic

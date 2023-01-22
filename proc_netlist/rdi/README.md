@@ -1,5 +1,6 @@
 # RDI
 
+
 ## Description
 
 Module to get the address in rom of the next instruction to read.
@@ -30,7 +31,9 @@ add3 = jmp_cond_fullfiled as the selector, add1 as the first value, add2 as the 
 
 add4 = instr_is_jmp as the selector, add1 as the first value, add3 as the second value
 
-finally we return add4
+finally we return add4.
+
+---
 
 ## Schematic
 
