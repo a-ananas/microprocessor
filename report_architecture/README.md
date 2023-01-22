@@ -3,8 +3,9 @@
 We’ve chosen to make our project using the 32 bits RISC-’s architecture.
 We’ll use 32 registers.
 
+---
 
-# Instruction Set
+## Instruction Set
 
 We’ll use a total of 28 instructions to make operations between unsigned
 integers. We’ll encode our instructions in different ways according to
@@ -45,8 +46,9 @@ not mandatory but it can come handy in some particular cases.
 |  <p style="text-align: center;">I</p>  | <p style="text-align: center;">immédiat</p> |     | <p style="text-align: center;">rs</p>  | <p style="text-align: center;">rd</p>  | <p style="text-align: center;">opcode</p> |
 |  <p style="text-align: center;">U</p>  | <p style="text-align: center;">immédiat</p> |     |     | <p style="text-align: center;">rd</p>  | <p style="text-align: center;">opcode</p> |
 
+---
 
-# Opcodes
+## Opcodes
 
 Our instructions will have the following opcodes:
 
@@ -57,8 +59,9 @@ Our instructions will have the following opcodes:
 | 10  |  Lw  | Sw    |      | Beq  | Bne  | Blt  | Blti | Bge  |     |
 | 11  | Lui  | Auipc | Jal  | Jalr |      |      | Slt  | Slti |     |
 
+---
 
-# TLDR
+## TLDR
 
 | instruction | format | opcode |     usage      |                result                |
 |:-----------:|:------:|:------:|:--------------:|:------------------------------------:|

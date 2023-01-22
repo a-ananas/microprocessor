@@ -1,5 +1,6 @@
 # ALU
 
+
 ## Description
 
 This is the main Arithmetic and Logic unit.
@@ -17,6 +18,8 @@ For branching, if the condition is respected then the output would be a 1 extend
 it will be a 0 extended as well.
 
 We have three diferent shifts, logical left shift (multiplies by 2), logcial right shift (only 0 for replacing, divides by 2) and arithmetical right shift (divides by 2 conserving the sign).
+
+---
 
 ## Schematic
 

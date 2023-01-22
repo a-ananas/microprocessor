@@ -2,21 +2,30 @@
 
 [git hub link](https://github.com/a-ananas/microprocessor)
 
+
 ## Global architecture
 
 The global architecture and designs for this entire project is presented [here](#report-architechture).
+
+---
 
 ## Simulator
 
 Explanations for our simulator can be found [here](#a-netlist-simulator).
 
+---
+
 ## Assembler
 
 Explanations for the assembly part is [here](#assembler).
 
+---
+
 ## Microprocessor
 
-Our microprocessor is build using the Minijazz netlist format (more info about its insides [here](#microprocessor-1)
+Our microprocessor is build using the Minijazz netlist format (more info about its insides [here]
+
+---
 
 ## Clock
 
@@ -24,13 +33,17 @@ The clock is initialized putting current unix time in ram separated in seconds, 
 
 The clock takes some time to initialized since it's doing a double dabble for the years, months, days, hours, minutes and seconds which takes approximately 600 cycles.
 
+---
+
 # Report architechture
+
 
 ## Architecture choice
 
 We’ve chosen to make our project using the 32 bits RISC-’s architecture.
 We’ll use 32 registers.
 
+---
 
 ## Instruction Set
 
@@ -73,6 +86,7 @@ not mandatory but it can come handy in some particular cases.
 |  <p style="text-align: center;">I</p>  | <p style="text-align: center;">immédiat</p> |     | <p style="text-align: center;">rs</p>  | <p style="text-align: center;">rd</p>  | <p style="text-align: center;">opcode</p> |
 |  <p style="text-align: center;">U</p>  | <p style="text-align: center;">immédiat</p> |     |     | <p style="text-align: center;">rd</p>  | <p style="text-align: center;">opcode</p> |
 
+---
 
 ## Opcodes
 
@@ -85,6 +99,7 @@ Our instructions will have the following opcodes:
 | 10  |  Lw  | Sw    |      | Beq  | Bne  | Blt  | Blti | Bge  |     |
 | 11  | Lui  | Auipc | Jal  | Jalr |      |      | Slt  | Slti |     |
 
+---
 
 ## TLDR
 
@@ -114,6 +129,8 @@ Our instructions will have the following opcodes:
 |     Jal     |   U    | 11010  |    jal x0 1    |               rdi = 1                |
 |     Slt     |   R    | 11110  | slt x0 x1 x2 3 |       x0 = (x1 \< x2) ? 1 : 0        |
 |    Slti     |   I    | 11111  |  slti x0 x1 3  |        x0 = (x1 \< 3) ? 1 : 0        |
+
+---
 
 # A netlist simulator
 
@@ -165,6 +182,7 @@ Behavior for memories:
 
 </ul>
 
+---
 
 ## Clock logic
 
@@ -227,7 +245,10 @@ $$
 x13 = s_2
 $$
 
-# Assembler RISC-V 
+---
+
+# Assembler RISC-V
+
 
 ## Syntax :
 * R : `instr rd rs1 rs2`
@@ -243,12 +264,17 @@ $$
 
 So the syntax is first the register output, then the two registers or register immediate or immediate/label.
 
+---
+
 ## Compilation: 
 Run `make compiler` to create an executable named `asm`. It runs then on files with name of the format `file.x` (because its cool :sunglasses:).
 A `tests` directory is provided but we need more automatization. For the moment, the assembler takes care of immediates on 16 bits in two's complement. It's not optimal we might want to extend the range of immediates with different types of instructions.
 The instructions are coded in little endian and the format is the one from our report so on the string in reading order we have opcode then output register, immediate and input registers.
 
+---
+
 # Microprocessor
+
 
 ## Overall design
 
@@ -260,7 +286,7 @@ We've divided it into 6 major blocks:
 
 - The [rom](#rom): which is a read only memory that contains the program we want to run.
 
-- The di: which get all the informations encoded in the instructions comming from the ROM.
+- The [di](#the-instruction-decoder): which get all the informations encoded in the instructions comming from the ROM.
 
 - The [reg](#reg): which represents our registers logic.
 
@@ -268,7 +294,10 @@ We've divided it into 6 major blocks:
 
 - The [ram](#ram): which is our mutable memory.
 
+---
+
 ## RDI
+
 
 ### Description
 
@@ -300,9 +329,12 @@ add3 = jmp_cond_fullfiled as the selector, add1 as the first value, add2 as the 
 
 add4 = instr_is_jmp as the selector, add1 as the first value, add3 as the second value
 
-finally we return add4
+finally we return add4.
+
+---
 
 ## ROM
+
 
 ### Description
 
@@ -310,7 +342,10 @@ It takes as input an address `next_instr` from [rdi](#rdi) and returns the conca
 
 Addresses on 16 bits (so the netlist can be simulated in a decent amount of time).
 
+---
+
 ## REG
+
 
 ### Descritpion
 
@@ -327,7 +362,10 @@ the instruction opcode as the multiplexor selector.
 
 Lasty, `reg` return 2 variable, `i1` (the value read inside the register of address `rs1`) and `i2`. `i2` can get two possible values, if the instruction is of type `I` then `i2` is the immediate given as a parameter for the `get` function, otherwise, `i2` is the value read inside the register of address `rs2`.
 
+---
+
 ## ALU
+
 
 ### Description
 
@@ -347,20 +385,81 @@ it will be a 0 extended as well.
 
 We have three diferent shifts, logical left shift (multiplies by 2), logcial right shift (only 0 for replacing, divides by 2) and arithmetical right shift (divides by 2 conserving the sign).
 
+---
+
 ## RAM
 
-## Description
+
+### Description
 
 Uses only 3 inputs, the first input is used as the read address or a write data depending on the instruction,
 the second decides if we should write in the RAM or not and the last one is the write address.
 
-All addresses are on 16 bits (so the netlist can be simulated in a decent amount of time)
+All addresses are on 16 bits (so the netlist can be simulated in a decent amount of time).
+
+---
+
+## The instruction decoder
+
+
+### Description
+
+The decoder takes as inputs an instruction comming from the [ROM](#rom) and interprets it to produced 6 values:
+
+- an `opcode`, which represents the opcode encoded in the instruction. 
+- an `imm`, which represents the immediate encoded in the instruction.
+- a `rs1`, which represents the first register address encoded in the instruction (for format `U`, this value will not be taken into account later in the netlist).
+- a `rs2`, which represents the second register address encoded in the instruction (for formats `U` and `I`, this value will not be taken into account later in the netlist).
+- a `rd`, which represents the register address of the destination encoded in the instruction.
+- a `wenableReg`, which is a single bit telling us if we should write the last result in a register.
+- and a `wenableRAM`, which is a single bit telling us if we should write the last result in the [RAM](#ram).
+
+---
+
+## Tests
+
+
+### Description
+
+The folder `tests` contains some tests for the microprocessor different blocks.
+
+---
+
+### Howto
+
+Example of a main to put inside proc_netlist that uses a file from the tests directory.
+
+```python
+# inside proc_netlist/main.py
+
+import os
+import sys
+sys.path.insert(0, os.getcwd())
+
+# example for test_alu
+from tests import test_alu
+
+def main() -> None:
+    test_alu.test_alu()
+
+```
+
+---
+
+## Global utility functions
+
+The folder `global_utils` is a python module containing utility functions and global constants.
+
+---
 
 # Howto use this project
 
+
 ## Build everything
 
-To build everything you can either enter each subfolders and build anything particular part of the project you want or you can use the command `make` which will build the [assembler](assembler/), the [simulator](netlist_simulator/) and the netlist corresponding to the [microprocessor](proc_netlist/).
+To build everything you can either enter each subfolders and build anything particular part of the project you want or you can use the command `make` which will build the [assembler](#assembler), the [simulator](#a-netlist-simulator) and the netlist corresponding to the [microprocessor](#microprocessor-1).
+
+---
 
 ## Run a program
 
@@ -391,6 +490,8 @@ You can also add an option to choose if you want to print the registers at each 
 # This example will run the program ./assembler/tests/test_7seg.x during 11 simulator steps and output it as a clock
 ./run.sh -n 11 --clk ./assembler/tests/test_7seg.x
 ```
+
+---
 
 ## Run the clocks programs
 
