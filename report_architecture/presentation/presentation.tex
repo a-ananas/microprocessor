@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[table]{beamer}
 \useoutertheme[subsection=false]{smoothbars}
 \usecolortheme{beaver}
 
@@ -42,23 +42,6 @@
 		\tableofcontents
 	\end{frame}
 
-	\section{Le simulateur de netlist}
-	\begin{frame}
-		\frametitle{Le simulateur de netlist}	
-		\begin{itemize}
-			\item OCaml
-			\item Douleur
-			\item Je déteste les tris topologiques
-		\end{itemize}
-	\end{frame}
-
-	\section{Choix de l'architecture}
-	\subsection{RISC-\rom{5}}
-	\begin{frame}
-		\frametitle{Ensemble d'instructions}	
-		Faire un tableau - cf truc cool de Yannis
-	\end{frame}
-
 	\section{L'assembleur}
 	\begin{frame}
 		\frametitle{Correspondance syntaxe-addresses}
@@ -91,8 +74,39 @@
 			\end{tabular}
 	\end{frame}
 
-	\section{Le simulateur de netlist}
+	\section{Microprocesseur}
+	\begin{frame}
+		\frametitle{Schéma du microprocesseur}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{microproc_schema.png}
+		\end{figure}
+	\end{frame}
 
+	\section{Le simulateur de netlist}
+	\begin{frame}
+		\frametitle{Le simulateur de netlist}
+		\begin{figure}
+			\centering
+			\begin{tikzpicture}
+				\node (net) [empty] {};
+				\node (sim) [registers, right of=net, xshift=4cm] {simulateur};
+				\node (stdout) [empty, right of=sim, xshift=4cm] {};
+				\node (clk) [empty, below of=net] {-{}-clk};
+				\node (nstep) [empty, below of=clk] {-n nstep};
+				\node (rom) [empty, below of=nstep] {-rom $*.i$};
+
+				\draw [arrow] (net) -- node[anchor=south] {.net} (sim);
+				\draw [dashed,->] (clk) -| (sim);
+				\draw [dashed,->] (nstep) -| (sim);
+				\draw [dashed,->] (rom) -| (sim);
+				\draw [arrow] (sim) -- node[anchor=south] {stdout} (stdout);
+
+			\end{tikzpicture}
+		\end{figure}
+	\end{frame}
+
+	\section{Clock}
 	\begin{frame}
 		\frametitle{A l'initialisation}
 		\begin{figure}
@@ -117,14 +131,14 @@
 		\begin{figure}
 		\centering
 		\begin{tikzpicture}[node distance=2cm]
-			\node (x14) [registers] {x14: sec};
-			\node (dot) [empty, below of=x14] {\dots};
-			\node (x19) [registers, below of=dot] {x19: yr};
-			\node (ram) [memory, right of=x14, xshift=5cm] {RAM};
+			\node (x13) [registers] {x13: sec};
+			\node (dot) [empty, below of=x13] {\dots};
+			\node (x0) [registers, below of=dot] {x0: yr};
+			\node (ram) [memory, right of=x13, xshift=5cm] {RAM};
 
-			\draw [arrow] (ram) -- node[anchor=south] {0x1: si 1 : + 1} (x14);
-			\draw [arrow] (x14) -- node[anchor=east] {\emph{overflow}} (dot);
-			\draw [arrow] (dot) -- node[anchor=east] {\emph{overflow}} (x19);
+			\draw [arrow] (ram) -- node[anchor=south] {0x1: si 1 : + 1} (x13);
+			\draw [arrow] (x13) -- node[anchor=east] {\emph{overflow}} (dot);
+			\draw [arrow] (dot) -- node[anchor=east] {\emph{overflow}} (x0);
 		\end{tikzpicture}
 		\end{figure}
 	\end{frame}
@@ -148,7 +162,7 @@
 			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\multicolumn{14}{c}{}\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
-				0&0&0&0&&0&0&0&1&&1&1&1&x\\
+				0&0&0&0&&0&0&0&1&&1&1&1&\cellcolor{black!50}x\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
 			\end{tabular}
 		\end{center}}
@@ -158,7 +172,7 @@
 			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\multicolumn{14}{c}{}\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
-				0&0&0&0&&0&0&1&1&&1&1&x&x\\
+				0&0&0&0&&0&0&1&1&&1&1&\cellcolor{black!50}x&\cellcolor{black!50}x\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
 			\end{tabular}
 		\end{center}}
@@ -168,7 +182,7 @@
 			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\multicolumn{8}{c}{}&\multicolumn{1}{c}{+3}&\multicolumn{4}{c}{}\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
-				0&0&0&0&&0&1&1&1&&1&x&x&x\\
+				0&0&0&0&&0&1&1&1&&1&\cellcolor{black!50}x&\cellcolor{black!50}x&\cellcolor{black!50}x\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
 			\end{tabular}
 		\end{center}}
@@ -178,7 +192,7 @@
 			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\multicolumn{14}{c}{}\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
-				0&0&0&0&&1&0&1&0&&1&x&x&x\\
+				0&0&0&0&&1&0&1&0&&1&\cellcolor{black!50}x&\cellcolor{black!50}x&\cellcolor{black!50}x\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
 			\end{tabular}
 		\end{center}}
@@ -188,11 +202,21 @@
 			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\multicolumn{3}{c}{}&\multicolumn{1}{c}{1}&\multicolumn{4}{c}{}&\multicolumn{1}{c}{5}&\multicolumn{4}{c}{}\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
-				0&0&0&1&&0&1&0&1&&x&x&x&x\\
+				0&0&0&1&&0&1&0&1&&\cellcolor{black!50}x&\cellcolor{black!50}x&\cellcolor{black!50}x&\cellcolor{black!50}x\\
 				\cline{1-4} \cline{6-9} \cline{11-14}
 			\end{tabular}
 		\end{center}}
 
+	\end{frame}
+
+	\part{}
+	\begin{frame}[plain] % The optional argument 'plain' hides the headline and footline
+		\frametitle{Ce qui peut être amélioré}
+		\begin{itemize}
+			\item Double-Dabble en dur
+			\item Meilleur Jal
+			\item Découper la RAM en octets
+		\end{itemize}
 	\end{frame}
 		
 \end{document}
